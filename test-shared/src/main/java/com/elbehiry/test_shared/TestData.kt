@@ -14,25 +14,23 @@
  * limitations under the License.
  */
 
-plugins {
-    id("java-library")
-    kotlin("jvm")
-}
+package com.elbehiry.test_shared
 
-dependencies {
-    api(platform(project(":depconstraints")))
-    implementation(project(":model"))
+import com.elbehiry.model.Comic
+import com.github.javafaker.Faker
 
-    // Kotlin
-    implementation(Libs.KOTLIN_STDLIB)
+val faker = Faker()
 
-    // Test
-    implementation(Libs.JUNIT)
-    implementation(Libs.FAKER)
-    api(Libs.COROUTINES_TEST)
-}
-
-java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-}
+val COMIC_ITEM = Comic(
+    news = faker.lorem().sentence(),
+    img = faker.internet().image(),
+    transcript = faker.lorem().sentence(),
+    month = faker.number().digit(),
+    year = faker.number().digits(4),
+    num = faker.number().randomNumber().toInt(),
+    link = faker.internet().url(),
+    alt = faker.lorem().sentence(),
+    title = faker.lorem().sentence(),
+    day = faker.number().numberBetween(1, 31).toString(),
+    safeTitle = faker.lorem().sentence()
+)
