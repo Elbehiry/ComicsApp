@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-package com.elbehiry.shared.data.remote
+package com.elbehiry.shared.data.comics.remote
 
 import com.elbehiry.model.Comic
-import retrofit2.http.GET
 
-interface ComicsApi {
-    @GET("info.0.json")
+interface ComicsDataSource {
     suspend fun getComic(): Comic
 }

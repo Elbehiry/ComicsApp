@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package com.elbehiry.shared.data.remote
+package com.elbehiry.shared.data.comics.repository
 
 import com.elbehiry.model.Comic
-import retrofit2.http.GET
+import com.elbehiry.shared.data.comics.remote.ComicsDataSource
+import javax.inject.Inject
 
-interface ComicsApi {
-    @GET("info.0.json")
-    suspend fun getComic(): Comic
+class GetComicsRepository @Inject constructor(
+    private val comicsDataSource: ComicsDataSource
+) : ComicsRepository {
+    override suspend fun getComic(): Comic = comicsDataSource.getComic()
 }
