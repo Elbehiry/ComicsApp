@@ -75,6 +75,7 @@ dependencies {
     api(platform(project(":depconstraints")))
     kapt(platform(project(":depconstraints")))
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+    api(project(":model"))
 
     // Architecture Components
     implementation(Libs.LIFECYCLE_LIVE_DATA_KTX)

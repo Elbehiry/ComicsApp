@@ -9,5 +9,6 @@ rootProject.name = "ComicsApp"
 include(
     ":app",
     ":depconstraints",
-    ":shared"
+    ":shared",
+    ":model"
 )
