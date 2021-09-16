@@ -16,6 +16,7 @@
             <option value="$PROJECT_DIR$/depconstraints" />
             <option value="$PROJECT_DIR$/model" />
             <option value="$PROJECT_DIR$/shared" />
+            <option value="$PROJECT_DIR$/test-shared" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
