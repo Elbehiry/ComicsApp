@@ -49,8 +49,15 @@ android {
     }
 
     buildTypes {
-        getByName("release") {}
-        getByName("debug") {}
+        val urlName = "xkcd_BASE_URL"
+        val baseUrl = "\"http://xkcd.com/\""
+
+        getByName("release") {
+            buildConfigField("String", urlName, baseUrl)
+        }
+        getByName("debug") {
+            buildConfigField("String", urlName, baseUrl)
+        }
     }
 
     sourceSets {

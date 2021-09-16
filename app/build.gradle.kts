@@ -86,6 +86,7 @@ dependencies {
 
     implementation(Libs.APP_COMPAT)
     implementation(Libs.CORE_KTX)
+    implementation(Libs.MATERIAL)
 
     // Dagger Hilt
     implementation(Libs.HILT_ANDROID)
@@ -94,4 +95,36 @@ dependencies {
     kapt(Libs.ANDROIDX_HILT_COMPILER)
     kaptAndroidTest(Libs.HILT_COMPILER)
     kaptAndroidTest(Libs.ANDROIDX_HILT_COMPILER)
+
+    // COMPOSE
+    implementation(Libs.COMPOSE_RUNTIME)
+    implementation(Libs.COMPOSE_UI)
+    implementation(Libs.COMPOSE_FOUNDATION_LAYOUT)
+    implementation(Libs.COMPOSE_MATERIAL)
+    implementation(Libs.COMPOSE_UI_GRAPHICS)
+    implementation(Libs.COMPOSE_UI_TOOLING)
+    implementation(Libs.COMPOSE_RUNTIME_LIVEDATA)
+    implementation(Libs.COMPOSE_ANIMATION)
+    implementation(Libs.COMPOSE_NAVIGATION)
+    implementation(Libs.COMPOSE_ICON)
+    implementation(Libs.COMPOSE_ACTIVITY)
+    implementation(Libs.COMPOSE_CONSTRAINT)
+    implementation(Libs.COMPOSE_PAGING)
+    implementation(Libs.COMPOSE_VIEW_MODEL)
+
+    implementation(Libs.INSETS)
+    implementation(Libs.COIL)
+    implementation(Libs.ACCOMPANIST_PERMISSION)
+
+    androidTestImplementation(Libs.COMPOSE_TEST)
+
+    // test flow
+    testImplementation(Libs.TURBINE)
+
+    // Local unit tests
+    testImplementation(Libs.JUNIT)
+    testImplementation(Libs.EXT_JUNIT)
+    testImplementation(Libs.ASSERT_J)
+    testImplementation(Libs.MOCKK)
+    testImplementation(Libs.FAKER)
 }
