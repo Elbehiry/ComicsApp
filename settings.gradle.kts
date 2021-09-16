@@ -8,5 +8,6 @@ dependencyResolutionManagement {
 rootProject.name = "ComicsApp"
 include(
     ":app",
-    ":depconstraints"
+    ":depconstraints",
+    ":shared"
 )
