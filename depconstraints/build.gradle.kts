@@ -27,6 +27,7 @@ val glide = "4.9.0"
 val gson = "2.8.6"
 val hamcrest = "1.3"
 val hilt = Versions.HILT
+val hiltNavigation = "1.0.0-alpha03"
 val hiltJetPack = "1.0.0-alpha01"
 val junit = "4.13"
 val assertJVersion = "3.19.0"
@@ -79,6 +80,7 @@ dependencies {
         api("${Libs.HILT_ANDROID}:$hilt")
         api("${Libs.HILT_COMPILER}:$hilt")
         api("${Libs.HILT_TESTING}:$hilt")
+        api("${Libs.HILT_NAVIGATION}:$hiltNavigation")
         api("${Libs.HILT_VIEWMODEL}:$hiltJetPack")
         api("${Libs.JUNIT}:$junit")
         api("${Libs.ASSERT_J}:$assertJVersion")

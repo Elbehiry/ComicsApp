@@ -20,7 +20,6 @@ plugins {
     kotlin("kapt")
     id("dagger.hilt.android.plugin")
     id("kotlin-android")
-    id("androidx.navigation.safeargs.kotlin")
 }
 android {
     compileSdk = Versions.COMPILE_SDK
@@ -79,8 +78,14 @@ android {
 
 dependencies {
     api(platform(project(":depconstraints")))
+    implementation("androidx.appcompat:appcompat:1.3.1")
+    implementation("com.google.android.material:material:1.4.0")
     kapt(platform(project(":depconstraints")))
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+    implementation(project(":shared"))
+    testImplementation(project(":test-shared"))
+    api(project(":model"))
+
     // Kotlin
     implementation(Libs.KOTLIN_STDLIB)
 
@@ -91,6 +96,7 @@ dependencies {
     // Dagger Hilt
     implementation(Libs.HILT_ANDROID)
     implementation(Libs.HILT_VIEWMODEL)
+    implementation(Libs.HILT_NAVIGATION)
     kapt(Libs.HILT_COMPILER)
     kapt(Libs.ANDROIDX_HILT_COMPILER)
     kaptAndroidTest(Libs.HILT_COMPILER)
@@ -110,7 +116,6 @@ dependencies {
     implementation(Libs.COMPOSE_ACTIVITY)
     implementation(Libs.COMPOSE_CONSTRAINT)
     implementation(Libs.COMPOSE_PAGING)
-    implementation(Libs.COMPOSE_VIEW_MODEL)
 
     implementation(Libs.INSETS)
     implementation(Libs.COIL)
