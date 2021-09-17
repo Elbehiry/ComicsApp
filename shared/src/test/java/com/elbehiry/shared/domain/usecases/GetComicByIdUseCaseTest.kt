@@ -19,7 +19,7 @@ package com.elbehiry.shared.domain.usecases
 import android.accounts.NetworkErrorException
 import app.cash.turbine.test
 import com.elbehiry.shared.data.comics.repository.ComicsRepository
-import com.elbehiry.shared.domain.browse.GetRandomComicUseCase
+import com.elbehiry.shared.domain.browse.GetComicByIdUseCase
 import com.elbehiry.shared.result.Result
 import com.elbehiry.shared.result.data
 import com.elbehiry.test_shared.COMIC_ITEM
@@ -39,17 +39,17 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
-class GetRandomComicUseCaseTest {
+class GetComicByIdUseCaseTest {
     @get:Rule
     val mainCoroutineRule = MainCoroutineRule()
 
     @Mock
     private lateinit var comicsRepository: ComicsRepository
-    private lateinit var getRandomComicUseCase: GetRandomComicUseCase
+    private lateinit var getComicByIdUseCase: GetComicByIdUseCase
 
     @Before
     fun setUp() {
-        getRandomComicUseCase = GetRandomComicUseCase(
+        getComicByIdUseCase = GetComicByIdUseCase(
             comicsRepository, mainCoroutineRule.testDispatcher
         )
     }
@@ -62,7 +62,7 @@ class GetRandomComicUseCaseTest {
                     Result.Success(COMIC_ITEM)
                 )
             )
-            getRandomComicUseCase(createDummyParams()).test {
+            getComicByIdUseCase(createDummyParams()).test {
                 Assertions.assertThat(expectItem() is Result.Success)
                 expectComplete()
             }
@@ -76,7 +76,7 @@ class GetRandomComicUseCaseTest {
                     Result.Success(COMIC_ITEM)
                 )
             )
-            getRandomComicUseCase(createDummyParams()).test {
+            getComicByIdUseCase(createDummyParams()).test {
                 Assert.assertEquals(expectItem().data, COMIC_ITEM)
                 expectComplete()
             }
@@ -89,7 +89,7 @@ class GetRandomComicUseCaseTest {
                 flowOf(Result.Error(NetworkErrorException("Network Failure")))
             )
 
-            getRandomComicUseCase(createDummyParams()).test {
+            getComicByIdUseCase(createDummyParams()).test {
                 Assertions.assertThat(expectItem() is Result.Error)
                 expectComplete()
             }
@@ -102,7 +102,7 @@ class GetRandomComicUseCaseTest {
                 flowOf(Result.Error(NetworkErrorException("Network Failure")))
             )
 
-            getRandomComicUseCase(createDummyParams()).test {
+            getComicByIdUseCase(createDummyParams()).test {
                 Assertions.assertThat(
                     (expectItem() as Result.Error).exception is NetworkErrorException
                 )
@@ -110,7 +110,7 @@ class GetRandomComicUseCaseTest {
             }
         }
 
-    private fun createDummyParams() = GetRandomComicUseCase.Params.create(
+    private fun createDummyParams() = GetComicByIdUseCase.Params.create(
         faker.number().digits(2).toInt()
     )
 }

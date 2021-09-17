@@ -63,13 +63,13 @@ fun ComicItem(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
+            .clickable { onDetails(comic?.num ?: 0) }
     ) {
         val (image, time, title, desc, random) = createRefs()
         Surface(
             modifier = modifier
                 .fillMaxWidth()
                 .height(250.dp)
-                .clickable { onDetails(comic?.num ?: 0) }
                 .constrainAs(image) {
                     linkTo(
                         start = parent.start,

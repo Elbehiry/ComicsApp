@@ -25,10 +25,10 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetRandomComicUseCase @Inject constructor(
+class GetComicByIdUseCase @Inject constructor(
     private val comicsRepository: ComicsRepository,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
-) : FlowUseCase<GetRandomComicUseCase.Params, Comic>(ioDispatcher) {
+) : FlowUseCase<GetComicByIdUseCase.Params, Comic>(ioDispatcher) {
 
     override fun execute(parameters: Params): Flow<Result<Comic>> =
         comicsRepository.getRandomComic(parameters.comicId)

@@ -17,53 +17,68 @@
 package com.elbehiry.comicsapp.ui.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
+import androidx.lifecycle.Lifecycle
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavType
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navArgument
+import com.elbehiry.comicsapp.ui.details.ComicsDetails
 import com.elbehiry.comicsapp.ui.main.HomeView
-import com.elbehiry.comicsapp.ui.main.MainViewModel
+import com.elbehiry.comicsapp.ui.navigation.MainDestinations.COMIC_DETAIL_ID_KEY
 import com.elbehiry.model.Comic
 
 object MainDestinations {
     const val Home_ROUTE = "home"
     const val DETAILS_ROUTE = "detail"
     const val SEARCH_ROUTE = "search"
+    const val COMIC_DETAIL_ID_KEY = "comicId"
 }
 
 @Composable
 fun NavGraph(
     startDestination: String = MainDestinations.Home_ROUTE,
+    onExplanation: (Int) -> Unit,
     onShare: (Comic?) -> Unit
 ) {
     val navController = rememberNavController()
-    val actions = remember(navController) { MainActions(navController) }
 
     NavHost(
         navController = navController,
         startDestination = startDestination
     ) {
-        composable((MainDestinations.Home_ROUTE)) {
+        composable(MainDestinations.Home_ROUTE) {
             HomeView(
-                onDetails = { actions.openDetails },
+                onDetails = {
+                    navController.navigate(route = "${MainDestinations.DETAILS_ROUTE}/$it")
+                },
                 onShare = onShare
-            ) { actions.openSearch() }
+            ) {
+                navController.navigate(
+                    route = MainDestinations.SEARCH_ROUTE
+                )
+            }
         }
-        composable((MainDestinations.DETAILS_ROUTE)) {
+        composable(
+            "${MainDestinations.DETAILS_ROUTE}/{$COMIC_DETAIL_ID_KEY}",
+            arguments = listOf(
+                navArgument(COMIC_DETAIL_ID_KEY) { type = NavType.IntType }
+            )
+        ) { backStackEntry: NavBackStackEntry ->
+            val arguments = requireNotNull(backStackEntry.arguments)
+            val comicId = arguments.getInt(COMIC_DETAIL_ID_KEY)
+
+            ComicsDetails(comicId, onExplanation) {
+                if (backStackEntry.lifecycleIsResumed()) {
+                    navController.navigateUp()
+                }
+            }
         }
-        composable((MainDestinations.SEARCH_ROUTE)) {
+        composable(MainDestinations.SEARCH_ROUTE) {
         }
     }
 }
 
-class MainActions(navController: NavHostController) {
-    val openSearch: () -> Unit = {
-        navController.navigate(MainDestinations.SEARCH_ROUTE)
-    }
-
-    val openDetails = { comicNumber: Int ->
-        navController.navigate("${MainDestinations.DETAILS_ROUTE}/$comicNumber")
-    }
-}
+private fun NavBackStackEntry.lifecycleIsResumed() =
+    this.lifecycle.currentState == Lifecycle.State.RESUMED
