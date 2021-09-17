@@ -9,7 +9,6 @@ buildscript {
         classpath("com.android.tools.build:gradle:${Versions.ANDROID_GRADLE_PLUGIN}")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.KOTLIN}")
         classpath("com.google.dagger:hilt-android-gradle-plugin:${Versions.HILT}")
-        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:${Versions.NAVIGATION}")
     }
 }
 plugins {
@@ -45,7 +44,9 @@ subprojects {
             "-Xuse-experimental=kotlin.ExperimentalStdlibApi",
             "-Xuse-experimental=kotlin.time.ExperimentalTime",
             "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi",
-            "-Xuse-experimental=kotlinx.coroutines.FlowPreview"
+            "-Xuse-experimental=kotlinx.coroutines.FlowPreview",
+            "-Xuse-experimental=androidx.compose.animation.ExperimentalAnimationApi",
+            "-Xuse-experimental=coil.annotation.ExperimentalCoilApi",
         )
     }
 }
