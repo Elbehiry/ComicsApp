@@ -51,5 +51,6 @@ data class Comic(
     val day: String? = null,
 
     @Json(name = "safe_title")
-    val safeTitle: String? = null
+    val safeTitle: String? = null,
+    var saved: Boolean = false
 )

@@ -17,6 +17,7 @@
 package com.elbehiry.comicsapp.ui.main
 
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -35,12 +36,24 @@ class MainActivity : AppCompatActivity() {
         setContent {
             ComicsComposeTheme {
                 ProvideWindowInsets {
-                    NavGraph {
+                    NavGraph(
+                        onExplanation = {
+                            openExplanationLink(it)
+                        }
+                    ) {
                         shareComic(it)
                     }
                 }
             }
         }
+    }
+
+    private fun openExplanationLink(comicId: Int) {
+        startActivity(
+            Intent(Intent.ACTION_VIEW).apply {
+                this.data = Uri.parse("${getString(R.string.explained_url)}$comicId")
+            }
+        )
     }
 
     private fun shareComic(comic: Comic?) {

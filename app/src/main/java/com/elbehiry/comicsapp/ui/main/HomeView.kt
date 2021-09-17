@@ -97,8 +97,8 @@ fun HomeView(
     ) {
         when (selectedTab) {
             ComicHomeTabs.Home -> ComicsView(
-                onDetails = onDetails,
-                onShare = onShare
+                onShare = onShare,
+                onDetails = onDetails
             )
             ComicHomeTabs.BookMark -> BookMark()
         }

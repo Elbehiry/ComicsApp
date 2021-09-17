@@ -20,7 +20,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.elbehiry.model.Comic
 import com.elbehiry.shared.domain.browse.GetComicUseCase
-import com.elbehiry.shared.domain.browse.GetRandomComicUseCase
+import com.elbehiry.shared.domain.browse.GetComicByIdUseCase
 import com.elbehiry.shared.result.Result
 import com.elbehiry.shared.result.data
 import com.elbehiry.comicsapp.utils.WhileViewSubscribed
@@ -44,7 +44,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val getComicUseCase: GetComicUseCase,
-    private val getRandomComicUseCase: GetRandomComicUseCase
+    private val getComicByIdUseCase: GetComicByIdUseCase
 ) : ViewModel() {
 
     private val _comic = MutableStateFlow<Comic?>(null)
@@ -63,8 +63,8 @@ class MainViewModel @Inject constructor(
                 getComicUseCase(Unit)
             }
             is FetchType.Random -> {
-                val params = GetRandomComicUseCase.Params.create(type.comicId)
-                getRandomComicUseCase(params)
+                val params = GetComicByIdUseCase.Params.create(type.comicId)
+                getComicByIdUseCase(params)
             }
         }
     }.onEach {
