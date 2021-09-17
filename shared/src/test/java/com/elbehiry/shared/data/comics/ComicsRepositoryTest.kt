@@ -16,12 +16,16 @@
 
 package com.elbehiry.shared.data.comics
 
+import app.cash.turbine.test
 import com.elbehiry.shared.data.comics.remote.ComicsDataSource
 import com.elbehiry.shared.data.comics.repository.ComicsRepository
 import com.elbehiry.shared.data.comics.repository.GetComicsRepository
+import com.elbehiry.shared.result.data
 import com.elbehiry.test_shared.COMIC_ITEM
 import com.elbehiry.test_shared.MainCoroutineRule
+import com.elbehiry.test_shared.faker
 import com.elbehiry.test_shared.runBlockingTest
+import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.whenever
 import org.junit.Assert
 import org.junit.Before
@@ -50,9 +54,25 @@ class ComicsRepositoryTest {
     fun `test get comics should call data source get comics and return successful`() {
         coroutineRule.runBlockingTest {
             whenever(comicsDataSource.getComic()).thenReturn(COMIC_ITEM)
-            val item = comicsRepository.getComic()
+            comicsRepository.getComic().test {
+                Assert.assertEquals(expectItem().data, COMIC_ITEM)
+                expectComplete()
+            }
             Mockito.verify(comicsDataSource).getComic()
-            Assert.assertEquals(item, COMIC_ITEM)
+        }
+    }
+
+    @Test
+    fun `test get random comics should call data source get random comics and return successful`() {
+        coroutineRule.runBlockingTest {
+            whenever(comicsDataSource.getRandomComic(any())).thenReturn(COMIC_ITEM)
+            comicsRepository.getRandomComic(
+                faker.number().digits(2).toInt()
+            ).test {
+                Assert.assertEquals(expectItem().data, COMIC_ITEM)
+                expectComplete()
+            }
+            Mockito.verify(comicsDataSource).getRandomComic(any())
         }
     }
 }

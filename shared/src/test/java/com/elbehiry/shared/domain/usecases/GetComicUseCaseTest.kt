@@ -17,7 +17,8 @@
 package com.elbehiry.shared.domain.usecases
 
 import android.accounts.NetworkErrorException
-import com.elbehiry.model.Comic
+import app.cash.turbine.test
+import org.assertj.core.api.Assertions.assertThat
 import com.elbehiry.shared.data.comics.repository.ComicsRepository
 import com.elbehiry.shared.domain.browse.GetComicUseCase
 import com.elbehiry.shared.result.Result
@@ -26,7 +27,7 @@ import com.elbehiry.test_shared.COMIC_ITEM
 import com.elbehiry.test_shared.MainCoroutineRule
 import com.elbehiry.test_shared.runBlockingTest
 import com.nhaarman.mockito_kotlin.whenever
-import org.assertj.core.api.Assertions
+import kotlinx.coroutines.flow.flowOf
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
@@ -56,47 +57,53 @@ class GetComicUseCaseTest {
     fun `get comics returns data as Result_Success value`() =
         mainCoroutineRule.runBlockingTest {
             whenever(comicsRepository.getComic()).thenReturn(
-                COMIC_ITEM
+                flowOf(
+                    Result.Success(COMIC_ITEM)
+                )
             )
-            val result = getComicUseCase(Unit)
-            Assertions.assertThat(result is Result.Success)
+            getComicUseCase(Unit).test {
+                assertThat(expectItem() is Result.Success)
+                expectComplete()
+            }
         }
 
     @Test
     fun `get comics returns data as Result_Success value with expected item value`() =
         mainCoroutineRule.runBlockingTest {
             whenever(comicsRepository.getComic()).thenReturn(
-                COMIC_ITEM
+                flowOf(
+                    Result.Success(COMIC_ITEM)
+                )
             )
-            val result = getComicUseCase(Unit)
-            Assert.assertEquals(result.data, COMIC_ITEM)
+            getComicUseCase(Unit).test {
+                Assert.assertEquals(expectItem().data, COMIC_ITEM)
+                expectComplete()
+            }
         }
 
     @Test
     fun `get comics fails should returns data as Result_Error value`() =
         mainCoroutineRule.runBlockingTest {
-            getComicUseCase = GetComicUseCase(
-                FakeFailedComicsRepository(), mainCoroutineRule.testDispatcher
+            whenever(comicsRepository.getComic()).thenReturn(
+                flowOf(Result.Error(NetworkErrorException("Network Failure")))
             )
 
-            val result = getComicUseCase(Unit)
-            Assertions.assertThat(result is Result.Error)
+            getComicUseCase(Unit).test {
+                assertThat(expectItem() is Result.Error)
+                expectComplete()
+            }
         }
 
     @Test
     fun `get comics fails should returns data as Result_Error message value`() =
         mainCoroutineRule.runBlockingTest {
-            getComicUseCase = GetComicUseCase(
-                FakeFailedComicsRepository(), mainCoroutineRule.testDispatcher
+            whenever(comicsRepository.getComic()).thenReturn(
+                flowOf(Result.Error(NetworkErrorException("Network Failure")))
             )
 
-            val result = getComicUseCase(Unit)
-            Assertions.assertThat((result as Result.Error).exception is NetworkErrorException)
+            getComicUseCase(Unit).test {
+                assertThat((expectItem() as Result.Error).exception is NetworkErrorException)
+                expectComplete()
+            }
         }
-
-    private inner class FakeFailedComicsRepository : ComicsRepository {
-        override suspend fun getComic(): Comic {
-            throw NetworkErrorException("Network Failure")
-        }
-    }
 }

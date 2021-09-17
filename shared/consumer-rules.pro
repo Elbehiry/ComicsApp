@@ -11,3 +11,5 @@
 
 # Firebase
 -dontwarn retrofit2.Call
+
+-keepclassmembers class com.elbehiry.model.** { <fields>; }

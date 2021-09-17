@@ -18,10 +18,26 @@ package com.elbehiry.shared.data.comics.repository
 
 import com.elbehiry.model.Comic
 import com.elbehiry.shared.data.comics.remote.ComicsDataSource
+import com.elbehiry.shared.result.Result
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class GetComicsRepository @Inject constructor(
     private val comicsDataSource: ComicsDataSource
 ) : ComicsRepository {
-    override suspend fun getComic(): Comic = comicsDataSource.getComic()
+    override fun getComic(): Flow<Result<Comic>> {
+        return flow {
+            val lastComic = comicsDataSource.getComic()
+            emit(Result.Success(lastComic))
+        }
+    }
+
+    override fun getRandomComic(comicId: Int): Flow<Result<Comic>> {
+        return flow {
+            emit(Result.Loading)
+            val lastComic = comicsDataSource.getRandomComic(comicId)
+            emit(Result.Success(lastComic))
+        }
+    }
 }

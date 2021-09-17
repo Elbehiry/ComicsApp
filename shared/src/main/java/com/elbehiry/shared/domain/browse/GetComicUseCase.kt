@@ -19,14 +19,15 @@ package com.elbehiry.shared.domain.browse
 import com.elbehiry.model.Comic
 import com.elbehiry.shared.data.comics.repository.ComicsRepository
 import com.elbehiry.shared.di.IoDispatcher
-import com.elbehiry.shared.domain.UseCase
+import com.elbehiry.shared.domain.FlowUseCase
+import com.elbehiry.shared.result.Result
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetComicUseCase @Inject constructor(
     private val comicsRepository: ComicsRepository,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
-) : UseCase<Unit, Comic>(ioDispatcher) {
-    override suspend fun execute(parameters: Unit): Comic =
-        comicsRepository.getComic()
+) : FlowUseCase<Unit, Comic>(ioDispatcher) {
+    override fun execute(parameters: Unit): Flow<Result<Comic>> = comicsRepository.getComic()
 }

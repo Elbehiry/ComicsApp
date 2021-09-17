@@ -21,7 +21,9 @@ import com.elbehiry.shared.data.comics.remote.GetComicsRemoteDataSource
 import com.elbehiry.shared.data.remote.ComicsApi
 import com.elbehiry.test_shared.COMIC_ITEM
 import com.elbehiry.test_shared.MainCoroutineRule
+import com.elbehiry.test_shared.faker
 import com.elbehiry.test_shared.runBlockingTest
+import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.whenever
 import org.junit.Assert
 import org.junit.Before
@@ -54,6 +56,18 @@ class ComicsDataSourceTest {
             whenever(api.getComic()).thenReturn(COMIC_ITEM)
             val item = comicsDataSource.getComic()
             verify(api).getComic()
+            Assert.assertEquals(item, COMIC_ITEM)
+        }
+    }
+
+    @Test
+    fun `test get random comics should call api get random comics and return data successful`() {
+        mainCoroutineRule.runBlockingTest {
+            whenever(api.getRandomComic(any())).thenReturn(COMIC_ITEM)
+            val item = comicsDataSource.getRandomComic(
+                faker.number().digits(2).toInt()
+            )
+            verify(api).getRandomComic(any())
             Assert.assertEquals(item, COMIC_ITEM)
         }
     }

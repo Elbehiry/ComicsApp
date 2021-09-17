@@ -18,8 +18,12 @@ package com.elbehiry.shared.data.remote
 
 import com.elbehiry.model.Comic
 import retrofit2.http.GET
+import retrofit2.http.Path
 
 interface ComicsApi {
     @GET("info.0.json")
     suspend fun getComic(): Comic
+
+    @GET("{comic_id}/info.0.json")
+    suspend fun getRandomComic(@Path("comic_id")comicId: Int): Comic
 }

@@ -17,7 +17,10 @@
 package com.elbehiry.shared.data.comics.repository
 
 import com.elbehiry.model.Comic
+import com.elbehiry.shared.result.Result
+import kotlinx.coroutines.flow.Flow
 
 interface ComicsRepository {
-    suspend fun getComic(): Comic
+    fun getComic(): Flow<Result<Comic>>
+    fun getRandomComic(comicId: Int): Flow<Result<Comic>>
 }

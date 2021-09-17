@@ -17,6 +17,7 @@ object Libs {
     const val HILT_VIEWMODEL = "androidx.hilt:hilt-lifecycle-viewmodel"
     const val HILT_COMPILER = "com.google.dagger:hilt-android-compiler"
     const val HILT_TESTING = "com.google.dagger:hilt-android-testing"
+    const val HILT_NAVIGATION = "androidx.hilt:hilt-navigation-compose"
     const val JUNIT = "junit:junit"
     const val ASSERT_J = "org.assertj:assertj-core"
     const val MOCKK = "io.mockk:mockk"
