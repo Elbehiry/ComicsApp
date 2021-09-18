@@ -34,3 +34,10 @@ val COMIC_ITEM = Comic(
     day = faker.number().numberBetween(1, 31).toString(),
     safeTitle = faker.lorem().sentence()
 )
+
+val COMICS_ITEMS = listOf(
+    COMIC_ITEM.copy(num = faker.number().digits(3).toInt()),
+    COMIC_ITEM.copy(num = faker.number().digits(3).toInt()),
+    COMIC_ITEM.copy(num = faker.number().digits(3).toInt()),
+    COMIC_ITEM.copy(num = faker.number().digits(3).toInt())
+)
