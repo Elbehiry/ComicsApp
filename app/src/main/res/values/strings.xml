@@ -11,4 +11,7 @@
     <string name="explanation">Explanation</string>
     <string name="save">Save</string>
     <string name="book_mark_empty">The book mark list is empty, let\'s start add some!</string>
+    <string name="search_hint">Search by query or number</string>
+    <string name="search">Search</string>
+    <string name="BoomMark">BookMark</string>
 </resources>
