@@ -16,7 +16,36 @@
 
 package com.elbehiry.comicsapp.ui.main.bookmark
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.LazyVerticalGrid
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.elbehiry.comicsapp.R
+import com.elbehiry.comicsapp.ui.widget.EmptyView
 
 @Composable
-fun BookMark() {}
+fun BookMark(
+    onDetails: (Int) -> Unit
+) {
+    val viewModel = hiltViewModel<BookmarkViewModel>()
+    val recipes by viewModel.state.collectAsState()
+    LazyVerticalGrid(cells = GridCells.Fixed(2)) {
+        items(recipes.recipes.distinct()) { recipe ->
+            recipe.saved = true
+            ComicCachedItem(recipe, onDetails = onDetails) {
+                viewModel.deleteRecipe(recipe)
+            }
+        }
+    }
+
+    AnimatedVisibility(visible = recipes.isEmpty) {
+        EmptyView(
+            descText = stringResource(id = R.string.book_mark_empty)
+        )
+    }
+}

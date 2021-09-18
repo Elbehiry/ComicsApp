@@ -100,7 +100,7 @@ fun HomeView(
                 onShare = onShare,
                 onDetails = onDetails
             )
-            ComicHomeTabs.BookMark -> BookMark()
+            ComicHomeTabs.BookMark -> BookMark(onDetails)
         }
     }
 }

@@ -14,30 +14,18 @@
  * limitations under the License.
  */
 
-package com.elbehiry.test_shared
+package com.elbehiry.shared.utils
 
-import com.elbehiry.model.Comic
-import com.github.javafaker.Faker
+import com.elbehiry.shared.data.db.comics.entities.ComicEntity
+import com.elbehiry.test_shared.faker
 
-val faker = Faker()
-
-val COMIC_ITEM = Comic(
-    news = faker.lorem().sentence(),
-    img = faker.internet().image(),
-    transcript = faker.lorem().sentence(),
+val COMIC_ENTITY = ComicEntity(
+    comicNum = faker.number().digit().toInt(),
+    image = faker.internet().image(),
     month = faker.number().digit(),
     year = faker.number().digits(4),
-    num = faker.number().randomNumber().toInt(),
     link = faker.internet().url(),
     alt = faker.lorem().sentence(),
     title = faker.lorem().sentence(),
-    day = faker.number().numberBetween(1, 31).toString(),
-    safeTitle = faker.lorem().sentence()
-)
-
-val COMICS_ITEMS = listOf(
-    COMIC_ITEM.copy(num = faker.number().digits(3).toInt()),
-    COMIC_ITEM.copy(num = faker.number().digits(3).toInt()),
-    COMIC_ITEM.copy(num = faker.number().digits(3).toInt()),
-    COMIC_ITEM.copy(num = faker.number().digits(3).toInt())
+    day = faker.number().numberBetween(1, 31).toString()
 )

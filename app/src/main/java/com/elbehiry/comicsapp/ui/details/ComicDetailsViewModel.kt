@@ -22,6 +22,11 @@ import com.elbehiry.model.Comic
 import com.elbehiry.shared.domain.browse.GetComicByIdUseCase
 import com.elbehiry.shared.result.Result
 import com.elbehiry.comicsapp.utils.WhileViewSubscribed
+import com.elbehiry.shared.domain.bookmark.IsComicSavedUseCase
+import com.elbehiry.shared.domain.bookmark.GetComicsByNumLocallyUseCase
+import com.elbehiry.shared.domain.bookmark.SaveRecipeUseCase
+import com.elbehiry.shared.domain.bookmark.DeleteComicUseCase
+import com.elbehiry.shared.result.data
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
@@ -30,13 +35,19 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ComicDetailsViewModel @Inject constructor(
-    private val getComicByIdUseCase: GetComicByIdUseCase
+    private val getComicByIdUseCase: GetComicByIdUseCase,
+    private val isComicSavedUseCase: IsComicSavedUseCase,
+    private val getComicsByNumLocallyUseCase: GetComicsByNumLocallyUseCase,
+    private val savedComicsUseCase: SaveRecipeUseCase,
+    private val deleteComicUseCase: DeleteComicUseCase
 ) : ViewModel() {
 
     private val _isLoading = MutableStateFlow(false)
@@ -52,18 +63,36 @@ class ComicDetailsViewModel @Inject constructor(
     fun getComicDetails(comicId: Int) {
         viewModelScope.launch {
             _isLoading.value = true
-            val params = GetComicByIdUseCase.Params.create(comicId)
-            getComicByIdUseCase(params).collect { result ->
-                if (result is Result.Success) {
-                    _comicDetails.value = result.data
-                } else if (result is Result.Error) {
-                    _errorMessage.trySend(result.exception.message ?: "Error")
+            flowOf(isComicSavedUseCase(comicId))
+                .flatMapLatest {
+                    if (it.data == true) {
+                        flowOf(getComicsByNumLocallyUseCase(comicId))
+                    } else {
+                        val params = GetComicByIdUseCase.Params.create(comicId)
+                        getComicByIdUseCase(params)
+                    }
+                }.collect { result ->
+                    if (result is Result.Success) {
+                        if (result.data != null) {
+                            _comicDetails.value = result.data
+                        }
+                    } else if (result is Result.Error) {
+                        _errorMessage.trySend(result.exception.message ?: "Error")
+                    }
+                    _isLoading.value = false
                 }
-                _isLoading.value = false
-            }
         }
     }
 
-    fun onBookMark(it: Comic?) {
+    fun onBookMark(comic: Comic?) {
+        comic?.let {
+            viewModelScope.launch {
+                if (isComicSavedUseCase(comic.num).data == true) {
+                    deleteComicUseCase(comic.num)
+                } else {
+                    savedComicsUseCase(comic)
+                }
+            }
+        }
     }
 }
