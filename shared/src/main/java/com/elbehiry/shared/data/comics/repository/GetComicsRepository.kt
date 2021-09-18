@@ -35,7 +35,6 @@ class GetComicsRepository @Inject constructor(
 
     override fun getRandomComic(comicId: Int): Flow<Result<Comic>> {
         return flow {
-            emit(Result.Loading)
             val lastComic = comicsDataSource.getRandomComic(comicId)
             emit(Result.Success(lastComic))
         }

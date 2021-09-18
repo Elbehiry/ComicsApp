@@ -27,6 +27,7 @@ import androidx.navigation.compose.navArgument
 import com.elbehiry.comicsapp.ui.details.ComicsDetails
 import com.elbehiry.comicsapp.ui.main.HomeView
 import com.elbehiry.comicsapp.ui.navigation.MainDestinations.COMIC_DETAIL_ID_KEY
+import com.elbehiry.comicsapp.ui.search.SearchScreen
 import com.elbehiry.model.Comic
 
 object MainDestinations {
@@ -76,6 +77,9 @@ fun NavGraph(
             }
         }
         composable(MainDestinations.SEARCH_ROUTE) {
+            SearchScreen(navController) {
+                navController.navigate(route = "${MainDestinations.DETAILS_ROUTE}/$it")
+            }
         }
     }
 }

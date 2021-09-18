@@ -58,6 +58,15 @@ class ComicsLocalDataStore @Inject constructor(
 
     override suspend fun isComicSaved(comicNum: Int?): Boolean = comicsTable.isComicSaved(comicNum)
 
+    override suspend fun searchComic(query: String): Comic? {
+        val comicEntity = comicsTable.searchComicByQuery(query)
+        return if (comicEntity != null) {
+            comicsMapper.mapToDataComic(comicEntity)
+        } else {
+            null
+        }
+    }
+
     private fun Flow<List<ComicEntity>>.toListDataRecipeFlow(): Flow<Result<List<Comic>>> {
         return this.map { items ->
             Result.Success(items.toDataComics())

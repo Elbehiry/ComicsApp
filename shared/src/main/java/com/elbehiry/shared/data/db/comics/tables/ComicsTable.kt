@@ -59,4 +59,12 @@ interface ComicsTable {
         """
     )
     suspend fun isComicSaved(comicNum: Int?): Boolean
+
+    @Query(
+        """
+        SELECT * FROM ${ComicEntity.Schema.TABLE_NAME} 
+        WHERE ${ComicEntity.Schema.COMIC_TITLE} LIKE '%' || :query || '%'
+        """
+    )
+    suspend fun searchComicByQuery(query: String): ComicEntity?
 }
