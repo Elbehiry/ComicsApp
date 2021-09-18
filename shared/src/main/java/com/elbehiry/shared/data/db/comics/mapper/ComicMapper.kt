@@ -47,6 +47,7 @@ internal class ComicMapperImpl @Inject constructor() : ComicMapper {
             month = comicEntity.month,
             year = comicEntity.year,
             link = comicEntity.link,
-            img = comicEntity.image
+            img = comicEntity.image,
+            saved = true
         )
 }
