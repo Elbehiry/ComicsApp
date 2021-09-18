@@ -129,9 +129,7 @@ fun DetailsTopBar(upPress: () -> Unit) {
                 text = stringResource(id = R.string.details),
                 color = Color.White,
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Black,
-                modifier = Modifier
-                    .padding(8.dp)
+                fontWeight = FontWeight.Black
             )
         },
         elevation = 6.dp,

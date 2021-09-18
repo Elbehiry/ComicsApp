@@ -10,4 +10,5 @@
     <string name="details">Details</string>
     <string name="explanation">Explanation</string>
     <string name="save">Save</string>
+    <string name="book_mark_empty">The book mark list is empty, let\'s start add some!</string>
 </resources>

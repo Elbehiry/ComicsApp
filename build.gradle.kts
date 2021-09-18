@@ -47,6 +47,7 @@ subprojects {
             "-Xuse-experimental=kotlinx.coroutines.FlowPreview",
             "-Xuse-experimental=androidx.compose.animation.ExperimentalAnimationApi",
             "-Xuse-experimental=coil.annotation.ExperimentalCoilApi",
+            "-Xuse-experimental=androidx.compose.foundation.ExperimentalFoundationApi"
         )
     }
 }
