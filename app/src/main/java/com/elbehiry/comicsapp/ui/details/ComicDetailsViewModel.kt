@@ -18,6 +18,7 @@ package com.elbehiry.comicsapp.ui.details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.elbehiry.comicsapp.ui.main.FetchType
 import com.elbehiry.model.Comic
 import com.elbehiry.shared.domain.browse.GetComicByIdUseCase
 import com.elbehiry.shared.result.Result
@@ -30,14 +31,7 @@ import com.elbehiry.shared.result.data
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.shareIn
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -50,8 +44,6 @@ class ComicDetailsViewModel @Inject constructor(
     private val deleteComicUseCase: DeleteComicUseCase
 ) : ViewModel() {
 
-    private val _isLoading = MutableStateFlow(false)
-    val isLoading: StateFlow<Boolean> = _isLoading
 
     private val _errorMessage = Channel<String>(1, BufferOverflow.DROP_LATEST)
     val errorMessage: Flow<String> =
@@ -60,27 +52,45 @@ class ComicDetailsViewModel @Inject constructor(
     private val _comicDetails = MutableStateFlow<Comic?>(null)
     val comicDetails: StateFlow<Comic?> = _comicDetails
 
+    private val getDetails = MutableSharedFlow<Int>()
+    private val viewState: StateFlow<Result<Comic?>> = getDetails.flatMapLatest { comicNum ->
+        flowOf(isComicSavedUseCase(comicNum))
+            .flatMapLatest {
+                if (it.data == true) {
+                    flowOf(getComicsByNumLocallyUseCase(comicNum))
+                } else {
+                    val params = GetComicByIdUseCase.Params.create(comicNum)
+                    getComicByIdUseCase(params)
+                }
+            }.onEach {
+                if (it is Result.Error) {
+                    _errorMessage.trySend(it.exception.message ?: "Error")
+                }
+            }
+    }.stateIn(viewModelScope, WhileViewSubscribed, Result.Loading)
+
+    val isLoading: StateFlow<Boolean> = viewState
+        .mapLatest {
+            it == Result.Loading
+        }.stateIn(viewModelScope, WhileViewSubscribed, false)
+
+    init {
+        viewModelScope.launch {
+            viewState
+                .mapLatest {
+                    it.data
+                }.collect { comic ->
+                    if (comic != null) {
+                        _errorMessage.trySend("")
+                        _comicDetails.value = comic
+                    }
+                }
+        }
+    }
+
     fun getComicDetails(comicId: Int) {
         viewModelScope.launch {
-            _isLoading.value = true
-            flowOf(isComicSavedUseCase(comicId))
-                .flatMapLatest {
-                    if (it.data == true) {
-                        flowOf(getComicsByNumLocallyUseCase(comicId))
-                    } else {
-                        val params = GetComicByIdUseCase.Params.create(comicId)
-                        getComicByIdUseCase(params)
-                    }
-                }.collect { result ->
-                    if (result is Result.Success) {
-                        if (result.data != null) {
-                            _comicDetails.value = result.data
-                        }
-                    } else if (result is Result.Error) {
-                        _errorMessage.trySend(result.exception.message ?: "Error")
-                    }
-                    _isLoading.value = false
-                }
+            getDetails.emit(comicId)
         }
     }
 
