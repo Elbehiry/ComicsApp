@@ -19,7 +19,6 @@ package com.elbehiry.comicsapp.ui.search
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.elbehiry.model.Comic
-import com.elbehiry.shared.domain.bookmark.GetComicsByNumLocallyUseCase
 import com.elbehiry.shared.domain.bookmark.SearchComicsUseCase
 import com.elbehiry.shared.result.data
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,14 +27,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchComicViewModel @Inject constructor(
-    private val getComicsByNumLocallyUseCase: GetComicsByNumLocallyUseCase,
     private val searchComicsUseCase: SearchComicsUseCase
 ) : ViewModel() {
 
@@ -50,12 +48,8 @@ class SearchComicViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             searchComic.flatMapLatest { query ->
-                if (query.intOrString() is Int) {
-                    flowOf(getComicsByNumLocallyUseCase(query.toInt()))
-                } else {
-                    flowOf(searchComicsUseCase(query))
-                }
-            }.mapLatest {
+                flowOf(searchComicsUseCase(query))
+            }.map {
                 it.data
             }.collect { comic ->
                 _comic.value = comic
@@ -71,5 +65,3 @@ class SearchComicViewModel @Inject constructor(
         }
     }
 }
-
-fun String.intOrString() = toIntOrNull() ?: this

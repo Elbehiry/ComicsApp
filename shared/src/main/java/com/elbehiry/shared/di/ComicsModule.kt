@@ -20,6 +20,7 @@ import com.elbehiry.shared.data.comics.remote.ComicsDataSource
 import com.elbehiry.shared.data.comics.remote.GetComicsRemoteDataSource
 import com.elbehiry.shared.data.comics.repository.ComicsRepository
 import com.elbehiry.shared.data.comics.repository.GetComicsRepository
+import com.elbehiry.shared.data.db.comics.datasource.IComicsLocalDataStore
 import com.elbehiry.shared.data.remote.ComicsApi
 import dagger.Module
 import dagger.Provides
@@ -35,7 +36,8 @@ class ComicsModule {
 
     @Provides
     fun provideRandomRecipesRepository(
-        comicsDataSource: ComicsDataSource
+        comicsDataSource: ComicsDataSource,
+        getComicsLocalDataStore: IComicsLocalDataStore
     ): ComicsRepository =
-        GetComicsRepository(comicsDataSource)
+        GetComicsRepository(comicsDataSource, getComicsLocalDataStore)
 }

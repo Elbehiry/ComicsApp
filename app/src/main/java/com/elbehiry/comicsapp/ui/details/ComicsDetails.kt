@@ -16,6 +16,7 @@
 
 package com.elbehiry.comicsapp.ui.details
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -50,6 +51,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.elbehiry.comicsapp.R
 import com.elbehiry.comicsapp.ui.widget.BookMarkButton
+import com.elbehiry.comicsapp.ui.widget.EmptyView
 import com.elbehiry.comicsapp.ui.widget.LoadingContent
 import com.elbehiry.comicsapp.ui.widget.NetworkImage
 import com.elbehiry.model.Comic
@@ -63,59 +65,68 @@ fun ComicsDetails(
     val viewModel = hiltViewModel<ComicDetailsViewModel>()
     val comicDetails by viewModel.comicDetails.collectAsState()
     val isLoading: Boolean by viewModel.isLoading.collectAsState()
+    val errorMessage by viewModel.errorMessage.collectAsState("")
     viewModel.getComicDetails(comicId)
-    LoadingContent(isLoading) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(color = MaterialTheme.colors.background)
-        ) {
-            DetailsTopBar(upPress = upPress)
-            LazyColumn {
-                item {
-                    NetworkImage(
-                        url = comicDetails?.img ?: "",
-                        contentDescription = null,
-                        contentScale = ContentScale.Fit,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(300.dp)
-                    )
-                }
-                item { ComicDivider() }
-                item {
-                    DetailsOptions(comicDetails, onExplanation) {
-                        viewModel.onBookMark(it)
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = MaterialTheme.colors.background)
+    ) {
+        DetailsTopBar(upPress = upPress)
+        LoadingContent(isLoading) {
+            AnimatedVisibility(visible = errorMessage.isEmpty()) {
+                LazyColumn {
+                    item {
+                        NetworkImage(
+                            url = comicDetails?.img ?: "",
+                            contentDescription = null,
+                            contentScale = ContentScale.Fit,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(300.dp)
+                        )
+                    }
+                    item { ComicDivider() }
+                    item {
+                        DetailsOptions(comicDetails, onExplanation) {
+                            viewModel.onBookMark(it)
+                        }
+                    }
+                    item { ComicDivider() }
+                    item {
+                        Text(
+                            text = comicDetails?.title ?: "",
+                            style = MaterialTheme.typography.subtitle1,
+                            color = Color.White,
+                            maxLines = 1,
+                            textAlign = TextAlign.Start,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp)
+                        )
+                    }
+
+                    item {
+                        Text(
+                            text = "${comicDetails?.alt}",
+                            style = MaterialTheme.typography.subtitle2,
+                            maxLines = 2,
+                            color = Color.White,
+                            textAlign = TextAlign.Start,
+                            modifier = Modifier
+                                .padding(top = 4.dp)
+                                .fillMaxWidth()
+                                .padding(16.dp)
+                        )
                     }
                 }
-                item { ComicDivider() }
-                item {
-                    Text(
-                        text = comicDetails?.title ?: "",
-                        style = MaterialTheme.typography.subtitle1,
-                        color = Color.White,
-                        maxLines = 1,
-                        textAlign = TextAlign.Start,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
-                    )
-                }
-
-                item {
-                    Text(
-                        text = "${comicDetails?.alt}",
-                        style = MaterialTheme.typography.subtitle2,
-                        maxLines = 2,
-                        color = Color.White,
-                        textAlign = TextAlign.Start,
-                        modifier = Modifier
-                            .padding(top = 4.dp)
-                            .fillMaxWidth()
-                            .padding(16.dp)
-                    )
-                }
+            }
+            AnimatedVisibility(visible = errorMessage.isNotEmpty()) {
+                EmptyView(
+                    titleText = stringResource(id = R.string.something_went_wrong),
+                    descText = stringResource(id = R.string.try_again_later)
+                )
             }
         }
     }

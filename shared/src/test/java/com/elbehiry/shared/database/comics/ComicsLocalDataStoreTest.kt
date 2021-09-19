@@ -17,8 +17,8 @@
 package com.elbehiry.shared.database.comics
 
 import app.cash.turbine.test
-import com.elbehiry.shared.data.db.comics.datastore.ComicsLocalDataStore
-import com.elbehiry.shared.data.db.comics.datastore.IComicsLocalDataStore
+import com.elbehiry.shared.data.db.comics.datasource.ComicsLocalDataStore
+import com.elbehiry.shared.data.db.comics.datasource.IComicsLocalDataStore
 import com.elbehiry.shared.data.db.comics.mapper.ComicMapper
 import com.elbehiry.shared.data.db.comics.mapper.ComicMapperImpl
 import com.elbehiry.shared.data.db.comics.tables.ComicsTable
@@ -58,15 +58,16 @@ class ComicsLocalDataStoreTest {
     }
 
     @Test
-    fun save_comic_to_table_successfully() = coroutineRule.runBlockingTest {
-        comicsDataSource.saveComic(COMIC_ITEM)
-        coEvery {
-            comicsTable.saveComic(mapper.mapToDataBaseComic(COMIC_ITEM))
+    fun `save comic should call table save comic with right data`() =
+        coroutineRule.runBlockingTest {
+            comicsDataSource.saveComic(COMIC_ITEM)
+            coEvery {
+                comicsTable.saveComic(mapper.mapToDataBaseComic(COMIC_ITEM))
+            }
         }
-    }
 
     @Test
-    fun get_comics_from_table_successfully() = coroutineRule.runBlockingTest {
+    fun `get comics after save data should return the data`() = coroutineRule.runBlockingTest {
         comicsDataSource.saveComic(COMIC_ITEM)
         coEvery { comicsTable.getComics() } returns
             flowOf(listOf(mapper.mapToDataBaseComic(COMIC_ITEM)))
@@ -77,16 +78,27 @@ class ComicsLocalDataStoreTest {
     }
 
     @Test
-    fun emits_comics_successfully() = coroutineRule.runBlockingTest {
-        val num = faker.number().digit().toInt()
-        val currentItem = COMIC_ITEM.copy(
-            num = num
-        )
-        val recipes = listOf(mapper.mapToDataBaseComic(currentItem))
-        coEvery { comicsTable.getComics() } returns flowOf(recipes)
-        comicsDataSource.getComics().test {
-            assertThat(expectItem().data?.get(0)?.num).isEqualTo(num)
-            expectComplete()
+    fun `get comics after save data should return the right data`() =
+        coroutineRule.runBlockingTest {
+            val num = faker.number().digit().toInt()
+            val currentItem = COMIC_ITEM.copy(
+                num = num
+            )
+            val recipes = listOf(mapper.mapToDataBaseComic(currentItem))
+            coEvery { comicsTable.getComics() } returns flowOf(recipes)
+            comicsDataSource.getComics().test {
+                assertThat(expectItem().data?.get(0)?.num).isEqualTo(num)
+                expectComplete()
+            }
         }
-    }
+
+    @Test
+    fun `delete comic should call table delete comic with right data`() =
+        coroutineRule.runBlockingTest {
+            val comicNum = faker.number().digit().toInt()
+            comicsDataSource.deleteComic(comicNum)
+            coEvery {
+                comicsTable.deleteComic(comicNum)
+            }
+        }
 }

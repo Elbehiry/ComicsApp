@@ -20,6 +20,7 @@ import app.cash.turbine.test
 import com.elbehiry.shared.data.comics.remote.ComicsDataSource
 import com.elbehiry.shared.data.comics.repository.ComicsRepository
 import com.elbehiry.shared.data.comics.repository.GetComicsRepository
+import com.elbehiry.shared.data.db.comics.datasource.IComicsLocalDataStore
 import com.elbehiry.shared.result.data
 import com.elbehiry.test_shared.COMIC_ITEM
 import com.elbehiry.test_shared.MainCoroutineRule
@@ -43,11 +44,13 @@ class ComicsRepositoryTest {
 
     @Mock
     private lateinit var comicsDataSource: ComicsDataSource
+    @Mock
+    private lateinit var getComicsLocalDataStore: IComicsLocalDataStore
     private lateinit var comicsRepository: ComicsRepository
 
     @Before
     fun setup() {
-        comicsRepository = GetComicsRepository(comicsDataSource)
+        comicsRepository = GetComicsRepository(comicsDataSource, getComicsLocalDataStore)
     }
 
     @Test
@@ -63,10 +66,24 @@ class ComicsRepositoryTest {
     }
 
     @Test
-    fun `test get random comics should call data source get random comics and return successful`() {
+    fun `test get specific comics should get data from data base if item is saved`() {
         coroutineRule.runBlockingTest {
+            whenever(getComicsLocalDataStore.getComicByNum(any())).thenReturn(COMIC_ITEM)
+            comicsRepository.getSpecificComic(
+                faker.number().digits(2).toInt()
+            ).test {
+                Assert.assertEquals(expectItem().data, COMIC_ITEM)
+                expectComplete()
+            }
+            Mockito.verify(getComicsLocalDataStore).getComicByNum(any())
+        }
+    }
+    @Test
+    fun `test get specific comics should call the service if comic not saved from the database`() {
+        coroutineRule.runBlockingTest {
+            whenever(getComicsLocalDataStore.getComicByNum(any())).thenReturn(null)
             whenever(comicsDataSource.getRandomComic(any())).thenReturn(COMIC_ITEM)
-            comicsRepository.getRandomComic(
+            comicsRepository.getSpecificComic(
                 faker.number().digits(2).toInt()
             ).test {
                 Assert.assertEquals(expectItem().data, COMIC_ITEM)

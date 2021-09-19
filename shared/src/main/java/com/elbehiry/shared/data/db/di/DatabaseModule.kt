@@ -21,8 +21,8 @@ import androidx.room.Room
 import com.elbehiry.shared.data.db.ComicsDataBase
 import com.elbehiry.shared.data.db.Constants
 import com.elbehiry.shared.data.db.MIGRATIONS
-import com.elbehiry.shared.data.db.comics.datastore.ComicsLocalDataStore
-import com.elbehiry.shared.data.db.comics.datastore.IComicsLocalDataStore
+import com.elbehiry.shared.data.db.comics.datasource.ComicsLocalDataStore
+import com.elbehiry.shared.data.db.comics.datasource.IComicsLocalDataStore
 import com.elbehiry.shared.data.db.comics.mapper.ComicMapper
 import com.elbehiry.shared.data.db.comics.mapper.ComicMapperImpl
 import com.elbehiry.shared.data.db.comics.tables.ComicsTable

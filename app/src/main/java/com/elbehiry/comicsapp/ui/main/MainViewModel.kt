@@ -20,10 +20,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.elbehiry.model.Comic
 import com.elbehiry.shared.domain.browse.GetComicUseCase
-import com.elbehiry.shared.domain.browse.GetComicByIdUseCase
 import com.elbehiry.shared.result.Result
 import com.elbehiry.shared.result.data
 import com.elbehiry.comicsapp.utils.WhileViewSubscribed
+import com.elbehiry.shared.domain.browse.GetRandomComicUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
@@ -44,7 +44,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val getComicUseCase: GetComicUseCase,
-    private val getComicByIdUseCase: GetComicByIdUseCase
+    private val getRandomComicUseCase: GetRandomComicUseCase
 ) : ViewModel() {
 
     private val _comic = MutableStateFlow<Comic?>(null)
@@ -63,8 +63,8 @@ class MainViewModel @Inject constructor(
                 getComicUseCase(Unit)
             }
             is FetchType.Random -> {
-                val params = GetComicByIdUseCase.Params.create(type.comicId)
-                getComicByIdUseCase(params)
+                val params = GetRandomComicUseCase.Params.create(type.comicNum)
+                getRandomComicUseCase(params)
             }
         }
     }.onEach {
@@ -104,12 +104,12 @@ class MainViewModel @Inject constructor(
 
     fun getRandomComic(num: Int) {
         viewModelScope.launch {
-            getComics.emit(FetchType.Random((1..num).random()))
+            getComics.emit(FetchType.Random(num))
         }
     }
 }
 
 sealed class FetchType {
     object MostRecent : FetchType()
-    class Random(val comicId: Int) : FetchType()
+    class Random(val comicNum: Int) : FetchType()
 }

@@ -17,7 +17,7 @@
 package com.elbehiry.shared.domain.bookmark
 
 import com.elbehiry.model.Comic
-import com.elbehiry.shared.data.db.comics.datastore.IComicsLocalDataStore
+import com.elbehiry.shared.data.db.comics.datasource.IComicsLocalDataStore
 import com.elbehiry.shared.di.IoDispatcher
 import com.elbehiry.shared.domain.UseCase
 import kotlinx.coroutines.CoroutineDispatcher

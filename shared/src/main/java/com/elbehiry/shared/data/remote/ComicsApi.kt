@@ -24,6 +24,6 @@ interface ComicsApi {
     @GET("info.0.json")
     suspend fun getComic(): Comic
 
-    @GET("{comic_id}/info.0.json")
-    suspend fun getRandomComic(@Path("comic_id")comicId: Int): Comic
+    @GET("{comicNum}/info.0.json")
+    suspend fun getRandomComic(@Path("comicNum")comicNum: Int): Comic
 }

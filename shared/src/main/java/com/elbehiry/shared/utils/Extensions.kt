@@ -14,18 +14,6 @@
  * limitations under the License.
  */
 
-package com.elbehiry.shared.domain.bookmark
+package com.elbehiry.shared.utils
 
-import com.elbehiry.shared.data.db.comics.datastore.IComicsLocalDataStore
-import com.elbehiry.shared.di.IoDispatcher
-import com.elbehiry.shared.domain.UseCase
-import kotlinx.coroutines.CoroutineDispatcher
-import javax.inject.Inject
-
-class IsComicSavedUseCase @Inject constructor(
-    private val dataStore: IComicsLocalDataStore,
-    @IoDispatcher ioDispatcher: CoroutineDispatcher
-) : UseCase<Int?, Boolean>(ioDispatcher) {
-
-    override suspend fun execute(parameters: Int?): Boolean = dataStore.isComicSaved(parameters)
-}
+fun String.intOrString() = toIntOrNull() ?: this

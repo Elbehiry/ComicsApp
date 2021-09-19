@@ -19,7 +19,7 @@ package com.elbehiry.shared.domain.usecases
 import android.accounts.NetworkErrorException
 import app.cash.turbine.test
 import com.elbehiry.shared.data.comics.repository.ComicsRepository
-import com.elbehiry.shared.domain.browse.GetComicByIdUseCase
+import com.elbehiry.shared.domain.browse.GetComicDetailsUseCase
 import com.elbehiry.shared.result.Result
 import com.elbehiry.shared.result.data
 import com.elbehiry.test_shared.COMIC_ITEM
@@ -39,17 +39,17 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
-class GetComicByIdUseCaseTest {
+class GetComicDetailsUseCaseTest {
     @get:Rule
     val mainCoroutineRule = MainCoroutineRule()
 
     @Mock
     private lateinit var comicsRepository: ComicsRepository
-    private lateinit var getComicByIdUseCase: GetComicByIdUseCase
+    private lateinit var getComicDetailsUseCase: GetComicDetailsUseCase
 
     @Before
     fun setUp() {
-        getComicByIdUseCase = GetComicByIdUseCase(
+        getComicDetailsUseCase = GetComicDetailsUseCase(
             comicsRepository, mainCoroutineRule.testDispatcher
         )
     }
@@ -57,12 +57,12 @@ class GetComicByIdUseCaseTest {
     @Test
     fun `get random comics returns data as Result_Success value`() =
         mainCoroutineRule.runBlockingTest {
-            whenever(comicsRepository.getRandomComic(any())).thenReturn(
+            whenever(comicsRepository.getSpecificComic(any())).thenReturn(
                 flowOf(
                     Result.Success(COMIC_ITEM)
                 )
             )
-            getComicByIdUseCase(createDummyParams()).test {
+            getComicDetailsUseCase(createDummyParams()).test {
                 Assertions.assertThat(expectItem() is Result.Success)
                 expectComplete()
             }
@@ -71,12 +71,12 @@ class GetComicByIdUseCaseTest {
     @Test
     fun `get random comics returns data as Result_Success value with expected item value`() =
         mainCoroutineRule.runBlockingTest {
-            whenever(comicsRepository.getRandomComic(any())).thenReturn(
+            whenever(comicsRepository.getSpecificComic(any())).thenReturn(
                 flowOf(
                     Result.Success(COMIC_ITEM)
                 )
             )
-            getComicByIdUseCase(createDummyParams()).test {
+            getComicDetailsUseCase(createDummyParams()).test {
                 Assert.assertEquals(expectItem().data, COMIC_ITEM)
                 expectComplete()
             }
@@ -85,11 +85,11 @@ class GetComicByIdUseCaseTest {
     @Test
     fun `get random comics fails should returns data as Result_Error value`() =
         mainCoroutineRule.runBlockingTest {
-            whenever(comicsRepository.getRandomComic(any())).thenReturn(
+            whenever(comicsRepository.getSpecificComic(any())).thenReturn(
                 flowOf(Result.Error(NetworkErrorException("Network Failure")))
             )
 
-            getComicByIdUseCase(createDummyParams()).test {
+            getComicDetailsUseCase(createDummyParams()).test {
                 Assertions.assertThat(expectItem() is Result.Error)
                 expectComplete()
             }
@@ -98,11 +98,11 @@ class GetComicByIdUseCaseTest {
     @Test
     fun `get random comics fails should returns data as Result_Error message value`() =
         mainCoroutineRule.runBlockingTest {
-            whenever(comicsRepository.getRandomComic(any())).thenReturn(
+            whenever(comicsRepository.getSpecificComic(any())).thenReturn(
                 flowOf(Result.Error(NetworkErrorException("Network Failure")))
             )
 
-            getComicByIdUseCase(createDummyParams()).test {
+            getComicDetailsUseCase(createDummyParams()).test {
                 Assertions.assertThat(
                     (expectItem() as Result.Error).exception is NetworkErrorException
                 )
@@ -110,7 +110,7 @@ class GetComicByIdUseCaseTest {
             }
         }
 
-    private fun createDummyParams() = GetComicByIdUseCase.Params.create(
+    private fun createDummyParams() = GetComicDetailsUseCase.Params.create(
         faker.number().digits(2).toInt()
     )
 }

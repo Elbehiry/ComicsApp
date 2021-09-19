@@ -20,5 +20,5 @@ import com.elbehiry.model.Comic
 
 interface ComicsDataSource {
     suspend fun getComic(): Comic
-    suspend fun getRandomComic(comicId: Int): Comic
+    suspend fun getRandomComic(comicNum: Int): Comic
 }

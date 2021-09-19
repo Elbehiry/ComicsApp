@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package com.elbehiry.shared.domain.bookmark
+package com.elbehiry.shared.data.db.comics.datasource
 
 import com.elbehiry.model.Comic
-import com.elbehiry.shared.data.db.comics.datastore.IComicsLocalDataStore
-import com.elbehiry.shared.di.IoDispatcher
-import com.elbehiry.shared.domain.UseCase
-import kotlinx.coroutines.CoroutineDispatcher
-import javax.inject.Inject
+import com.elbehiry.shared.result.Result
+import kotlinx.coroutines.flow.Flow
 
-class GetComicsByNumLocallyUseCase @Inject constructor(
-    private val dataStore: IComicsLocalDataStore,
-    @IoDispatcher ioDispatcher: CoroutineDispatcher
-) : UseCase<Int?, Comic?>(ioDispatcher) {
-    override suspend fun execute(parameters: Int?): Comic? = dataStore.getComicByNum(parameters)
+interface IComicsLocalDataStore {
+    suspend fun saveComic(comicItem: Comic)
+    fun getComics(): Flow<Result<List<Comic>>>
+    suspend fun getComicByNum(comicNum: Int?): Comic?
+    suspend fun deleteComic(comicNum: Int?)
+    suspend fun isComicSaved(comicNum: Int?): Boolean
+    suspend fun searchComic(query: String): Comic?
+    suspend fun toggleSavedComic(comic: Comic)
 }

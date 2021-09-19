@@ -50,7 +50,7 @@ interface ComicsTable {
         WHERE ${ComicEntity.Schema.COMIC_NUM} = :comicNum
         """
     )
-    suspend fun deleteRecipe(comicNum: Int?)
+    suspend fun deleteComic(comicNum: Int?)
 
     @Query(
         """
