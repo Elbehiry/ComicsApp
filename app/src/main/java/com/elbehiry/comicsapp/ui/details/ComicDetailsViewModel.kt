@@ -18,32 +18,34 @@ package com.elbehiry.comicsapp.ui.details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.elbehiry.comicsapp.ui.main.FetchType
 import com.elbehiry.model.Comic
-import com.elbehiry.shared.domain.browse.GetComicByIdUseCase
+import com.elbehiry.shared.domain.browse.GetComicDetailsUseCase
 import com.elbehiry.shared.result.Result
 import com.elbehiry.comicsapp.utils.WhileViewSubscribed
-import com.elbehiry.shared.domain.bookmark.IsComicSavedUseCase
-import com.elbehiry.shared.domain.bookmark.GetComicsByNumLocallyUseCase
-import com.elbehiry.shared.domain.bookmark.SaveRecipeUseCase
-import com.elbehiry.shared.domain.bookmark.DeleteComicUseCase
+import com.elbehiry.shared.domain.bookmark.ToggleSavedComicUseCase
 import com.elbehiry.shared.result.data
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ComicDetailsViewModel @Inject constructor(
-    private val getComicByIdUseCase: GetComicByIdUseCase,
-    private val isComicSavedUseCase: IsComicSavedUseCase,
-    private val getComicsByNumLocallyUseCase: GetComicsByNumLocallyUseCase,
-    private val savedComicsUseCase: SaveRecipeUseCase,
-    private val deleteComicUseCase: DeleteComicUseCase
+    private val getComicDetailsUseCase: GetComicDetailsUseCase,
+    private val toggleSavedComicUseCase: ToggleSavedComicUseCase
 ) : ViewModel() {
-
 
     private val _errorMessage = Channel<String>(1, BufferOverflow.DROP_LATEST)
     val errorMessage: Flow<String> =
@@ -54,19 +56,12 @@ class ComicDetailsViewModel @Inject constructor(
 
     private val getDetails = MutableSharedFlow<Int>()
     private val viewState: StateFlow<Result<Comic?>> = getDetails.flatMapLatest { comicNum ->
-        flowOf(isComicSavedUseCase(comicNum))
-            .flatMapLatest {
-                if (it.data == true) {
-                    flowOf(getComicsByNumLocallyUseCase(comicNum))
-                } else {
-                    val params = GetComicByIdUseCase.Params.create(comicNum)
-                    getComicByIdUseCase(params)
-                }
-            }.onEach {
-                if (it is Result.Error) {
-                    _errorMessage.trySend(it.exception.message ?: "Error")
-                }
-            }
+        val params = GetComicDetailsUseCase.Params.create(comicNum)
+        getComicDetailsUseCase(params)
+    }.onEach {
+        if (it is Result.Error) {
+            _errorMessage.trySend(it.exception.message ?: "Error")
+        }
     }.stateIn(viewModelScope, WhileViewSubscribed, Result.Loading)
 
     val isLoading: StateFlow<Boolean> = viewState
@@ -97,11 +92,8 @@ class ComicDetailsViewModel @Inject constructor(
     fun onBookMark(comic: Comic?) {
         comic?.let {
             viewModelScope.launch {
-                if (isComicSavedUseCase(comic.num).data == true) {
-                    deleteComicUseCase(comic.num)
-                } else {
-                    savedComicsUseCase(comic)
-                }
+                val params = ToggleSavedComicUseCase.Params.create(comic)
+                toggleSavedComicUseCase(params)
             }
         }
     }

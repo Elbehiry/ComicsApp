@@ -17,17 +17,30 @@
 package com.elbehiry.shared.domain.bookmark
 
 import com.elbehiry.model.Comic
-import com.elbehiry.shared.data.db.comics.datastore.IComicsLocalDataStore
+import com.elbehiry.shared.data.db.comics.datasource.IComicsLocalDataStore
 import com.elbehiry.shared.di.IoDispatcher
 import com.elbehiry.shared.domain.UseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Inject
 
-class SaveRecipeUseCase @Inject constructor(
+class ToggleSavedComicUseCase @Inject constructor(
     private val dataStore: IComicsLocalDataStore,
     @IoDispatcher ioDispatcher: CoroutineDispatcher
-) : UseCase<Comic, Unit>(ioDispatcher) {
-    override suspend fun execute(
-        parameters: Comic
-    ) = dataStore.saveComic(parameters)
+) : UseCase<ToggleSavedComicUseCase.Params, Unit>(ioDispatcher) {
+
+    override suspend fun execute(parameters: Params) = dataStore.toggleSavedComic(parameters.comic)
+
+    class Params private constructor(
+        val comic: Comic
+    ) {
+
+        companion object {
+            @JvmStatic
+            fun create(
+                comic: Comic,
+            ): Params {
+                return Params(comic)
+            }
+        }
+    }
 }

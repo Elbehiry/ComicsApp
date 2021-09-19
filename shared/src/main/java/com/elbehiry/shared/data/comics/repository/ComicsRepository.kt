@@ -22,5 +22,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface ComicsRepository {
     fun getComic(): Flow<Result<Comic>>
-    fun getRandomComic(comicId: Int): Flow<Result<Comic>>
+    fun getRandomComic(comicNum: Int): Flow<Result<Comic>>
+    fun getSpecificComic(comicNum: Int): Flow<Result<Comic>>
 }

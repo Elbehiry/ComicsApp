@@ -31,7 +31,7 @@ class GetComicsRemoteDataSource @Inject constructor(
         api.getComic()
     }
 
-    override suspend fun getRandomComic(comicId: Int): Comic = withContext(ioDispatcher) {
-        api.getRandomComic(comicId)
+    override suspend fun getRandomComic(comicNum: Int): Comic = withContext(ioDispatcher) {
+        api.getRandomComic(comicNum)
     }
 }

@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package com.elbehiry.shared.data.db.comics.datastore
+package com.elbehiry.shared.data.db.comics.datasource
 
 import com.elbehiry.model.Comic
 import com.elbehiry.shared.data.db.comics.entities.ComicEntity
 import com.elbehiry.shared.data.db.comics.mapper.ComicMapper
 import com.elbehiry.shared.data.db.comics.tables.ComicsTable
 import com.elbehiry.shared.result.Result
+import com.elbehiry.shared.utils.intOrString
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -54,16 +55,28 @@ class ComicsLocalDataStore @Inject constructor(
         }
     }
 
-    override suspend fun deleteComic(comicNum: Int?) = comicsTable.deleteRecipe(comicNum)
+    override suspend fun deleteComic(comicNum: Int?) = comicsTable.deleteComic(comicNum)
 
     override suspend fun isComicSaved(comicNum: Int?): Boolean = comicsTable.isComicSaved(comicNum)
 
     override suspend fun searchComic(query: String): Comic? {
-        val comicEntity = comicsTable.searchComicByQuery(query)
+        val comicEntity = if (query.intOrString() is Int) {
+            comicsTable.getComic(query.toInt())
+        } else {
+            comicsTable.searchComicByQuery(query)
+        }
         return if (comicEntity != null) {
             comicsMapper.mapToDataComic(comicEntity)
         } else {
             null
+        }
+    }
+
+    override suspend fun toggleSavedComic(comic: Comic) {
+        if (comicsTable.isComicSaved(comic.num)) {
+            comicsTable.deleteComic(comic.num)
+        } else {
+            comicsTable.saveComic(comicsMapper.mapToDataBaseComic(comic))
         }
     }
 

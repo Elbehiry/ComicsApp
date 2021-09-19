@@ -17,7 +17,7 @@
 package com.elbehiry.shared.domain.usecases
 
 import app.cash.turbine.test
-import com.elbehiry.shared.data.db.comics.datastore.IComicsLocalDataStore
+import com.elbehiry.shared.data.db.comics.datasource.IComicsLocalDataStore
 import com.elbehiry.shared.domain.bookmark.GetSavedComicsUseCase
 import com.elbehiry.shared.result.Result
 import com.elbehiry.shared.result.data

@@ -25,24 +25,24 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetComicByIdUseCase @Inject constructor(
+class GetComicDetailsUseCase @Inject constructor(
     private val comicsRepository: ComicsRepository,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
-) : FlowUseCase<GetComicByIdUseCase.Params, Comic>(ioDispatcher) {
+) : FlowUseCase<GetComicDetailsUseCase.Params, Comic>(ioDispatcher) {
 
     override fun execute(parameters: Params): Flow<Result<Comic>> =
-        comicsRepository.getRandomComic(parameters.comicId)
+        comicsRepository.getSpecificComic(parameters.comicNum)
 
     class Params private constructor(
-        val comicId: Int
+        val comicNum: Int
     ) {
 
         companion object {
             @JvmStatic
             fun create(
-                comicId: Int,
+                comicNum: Int,
             ): Params {
-                return Params(comicId)
+                return Params(comicNum)
             }
         }
     }
