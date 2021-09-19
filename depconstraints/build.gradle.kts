@@ -29,6 +29,7 @@ val hamcrest = "1.3"
 val hilt = Versions.HILT
 val hiltNavigation = "1.0.0-alpha03"
 val hiltJetPack = "1.0.0-alpha01"
+val hiltWorker = "1.0.0"
 val junit = "4.13"
 val assertJVersion = "3.19.0"
 val mockkVersion = "1.10.6"
@@ -61,6 +62,7 @@ val appCompat = "1.2.0-rc01"
 val faker = "1.0.2"
 val binder = "1.0.0-alpha01"
 val turbine = "0.5.2"
+val worker = "2.6.0"
 
 dependencies {
     constraints {
@@ -82,6 +84,7 @@ dependencies {
         api("${Libs.HILT_TESTING}:$hilt")
         api("${Libs.HILT_NAVIGATION}:$hiltNavigation")
         api("${Libs.HILT_VIEWMODEL}:$hiltJetPack")
+        api("${Libs.HILT_WORKER}:$hiltWorker")
         api("${Libs.JUNIT}:$junit")
         api("${Libs.ASSERT_J}:$assertJVersion")
         api("${Libs.MOCKK}:$mockkVersion")
@@ -140,6 +143,8 @@ dependencies {
         api("${Libs.HILT_BINDER}:$binder")
         api("${Libs.HILT_BINDER_COMPILER}:$binder")
         api("${Libs.TURBINE}:$turbine")
+        api("${Libs.WORKER}:$worker")
+        api("${Libs.WORKER_EXT}:$worker")
     }
 }
 

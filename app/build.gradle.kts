@@ -97,6 +97,7 @@ dependencies {
     implementation(Libs.HILT_ANDROID)
     implementation(Libs.HILT_VIEWMODEL)
     implementation(Libs.HILT_NAVIGATION)
+    implementation(Libs.HILT_WORKER)
     kapt(Libs.HILT_COMPILER)
     kapt(Libs.ANDROIDX_HILT_COMPILER)
     kaptAndroidTest(Libs.HILT_COMPILER)
@@ -120,6 +121,10 @@ dependencies {
     implementation(Libs.INSETS)
     implementation(Libs.COIL)
     implementation(Libs.ACCOMPANIST_PERMISSION)
+
+    // Worker
+    implementation(Libs.WORKER)
+    implementation(Libs.WORKER_EXT)
 
     androidTestImplementation(Libs.COMPOSE_TEST)
 
