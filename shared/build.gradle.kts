@@ -114,6 +114,9 @@ dependencies {
     implementation(Libs.HILT_ANDROID)
     kapt(Libs.HILT_COMPILER)
 
+    // Data store
+    api(Libs.DATA_STORE)
+
     // Unit tests
     testImplementation(Libs.JUNIT)
     testImplementation(Libs.HAMCREST)

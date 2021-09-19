@@ -19,19 +19,22 @@ package com.elbehiry.shared.data.comics.repository
 import com.elbehiry.model.Comic
 import com.elbehiry.shared.data.comics.remote.ComicsDataSource
 import com.elbehiry.shared.data.db.comics.datasource.IComicsLocalDataStore
+import com.elbehiry.shared.data.pref.PreferencesKeys
+import com.elbehiry.shared.data.pref.repository.DataStoreOperations
 import com.elbehiry.shared.result.Result
-import com.elbehiry.shared.result.data
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class GetComicsRepository @Inject constructor(
     private val comicsDataSource: ComicsDataSource,
-    private val getComicsLocalDataStore: IComicsLocalDataStore
+    private val getComicsLocalDataStore: IComicsLocalDataStore,
+    private val dataStoreSource: DataStoreOperations
 ) : ComicsRepository {
     override fun getComic(): Flow<Result<Comic>> {
         return flow {
             val lastComic = comicsDataSource.getComic()
+            dataStoreSource.save(PreferencesKeys.mostRecentComicNum, lastComic.num ?: 0)
             emit(Result.Success(lastComic))
         }
     }

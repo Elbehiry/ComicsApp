@@ -16,13 +16,20 @@
 
 package com.elbehiry.shared.di
 
+import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.createDataStore
 import com.elbehiry.shared.BuildConfig
+import com.elbehiry.shared.data.pref.repository.DataStoreOperations
+import com.elbehiry.shared.data.pref.repository.DataStoreLocalSource
 import com.elbehiry.shared.data.remote.ComicsApi
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -34,9 +41,22 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Named
 import javax.inject.Singleton
 
+const val dataStoreName = "ComicsDataStore"
+
 @InstallIn(SingletonComponent::class)
 @Module
 class SharedModule {
+
+    @Singleton
+    @Provides
+    fun provideDataStore(
+        @ApplicationContext context: Context
+    ) = context.createDataStore(dataStoreName)
+
+    @Singleton
+    @Provides
+    fun provideDataStoreSource(dataStore: DataStore<Preferences>): DataStoreOperations =
+        DataStoreLocalSource(dataStore)
 
     @Singleton
     @Provides
