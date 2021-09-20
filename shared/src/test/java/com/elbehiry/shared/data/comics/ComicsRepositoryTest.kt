@@ -29,9 +29,7 @@ import com.elbehiry.test_shared.faker
 import com.elbehiry.test_shared.runBlockingTest
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.doAnswer
-import com.nhaarman.mockito_kotlin.doNothing
 import com.nhaarman.mockito_kotlin.whenever
-import io.mockk.mockk
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
@@ -65,7 +63,7 @@ class ComicsRepositoryTest {
     @Test
     fun `test get comics should call data source get comics and return successful`() {
         coroutineRule.runBlockingTest {
-            doAnswer {  }.`when`(dataStoreSource).save(any(), any())
+            doAnswer { }.`when`(dataStoreSource).save(any(), any())
             whenever(comicsDataSource.getComic()).thenReturn(COMIC_ITEM)
             comicsRepository.getComic().test {
                 Assert.assertEquals(expectItem().data, COMIC_ITEM)
