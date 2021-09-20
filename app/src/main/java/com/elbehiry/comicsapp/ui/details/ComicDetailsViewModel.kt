@@ -41,6 +41,9 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * View Model for detail screen.
+ */
 @HiltViewModel
 class ComicDetailsViewModel @Inject constructor(
     private val getComicDetailsUseCase: GetComicDetailsUseCase,
@@ -83,12 +86,18 @@ class ComicDetailsViewModel @Inject constructor(
         }
     }
 
-    fun getComicDetails(comicId: Int) {
+    /**
+     * Get comic details using [comicNum] value.
+     */
+    fun getComicDetails(comicNum: Int) {
         viewModelScope.launch {
-            getDetails.emit(comicId)
+            getDetails.emit(comicNum)
         }
     }
 
+    /**
+     * Save/Delete comic from data base using [comic] value.
+     */
     fun onBookMark(comic: Comic?) {
         comic?.let {
             viewModelScope.launch {

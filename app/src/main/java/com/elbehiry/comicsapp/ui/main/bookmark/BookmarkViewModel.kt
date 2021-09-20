@@ -29,6 +29,9 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * View model for book mark screen.
+ */
 @HiltViewModel
 class BookmarkViewModel @Inject constructor(
     private val gatSavedComicsUseCase: GetSavedComicsUseCase,
@@ -49,20 +52,23 @@ class BookmarkViewModel @Inject constructor(
                 if (it.data.isNullOrEmpty()) {
                     _state.value = BookmarkViewState(isEmpty = true)
                 } else {
-                    _state.value = BookmarkViewState(recipes = it.data!!)
+                    _state.value = BookmarkViewState(comics = it.data!!)
                 }
             }
         }
     }
 
-    fun deleteRecipe(recipe: Comic) {
+    /**
+     * delete the [comic] using [comic.num]
+     */
+    fun deleteComic(comic: Comic) {
         viewModelScope.launch {
-            deletedComicsUseCase(recipe.num)
+            deletedComicsUseCase(comic.num)
         }
     }
 
     data class BookmarkViewState(
-        val recipes: List<Comic> = emptyList(),
+        val comics: List<Comic> = emptyList(),
         val isEmpty: Boolean = false
     )
 }

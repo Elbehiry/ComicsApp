@@ -26,6 +26,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
+/**
+ * Repository data source to get comics.
+ */
 class GetComicsRepository @Inject constructor(
     private val comicsDataSource: ComicsDataSource,
     private val getComicsLocalDataStore: IComicsLocalDataStore,
@@ -39,6 +42,9 @@ class GetComicsRepository @Inject constructor(
         }
     }
 
+    /**
+     * Get comic from database if it's exist, if not call the service to get the most recent comic.
+     */
     override fun getSpecificComic(comicNum: Int): Flow<Result<Comic>> {
         return flow {
             val isComicSaved = getComicsLocalDataStore.getComicByNum(comicNum)

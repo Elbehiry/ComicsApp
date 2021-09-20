@@ -23,6 +23,9 @@ import com.elbehiry.shared.domain.UseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Inject
 
+/**
+ * Search for comics in database using [String] query.
+ */
 class SearchComicsUseCase @Inject constructor(
     private val dataStore: IComicsLocalDataStore,
     @IoDispatcher ioDispatcher: CoroutineDispatcher

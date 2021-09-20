@@ -27,6 +27,10 @@ import androidx.hilt.work.HiltWorker
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 
+/**
+ * Worker to run in background, if new comic is published on the service,
+ * It fires internal (local) notification.
+ */
 @HiltWorker
 class NotificationWorker @AssistedInject constructor(
     @Assisted context: Context,

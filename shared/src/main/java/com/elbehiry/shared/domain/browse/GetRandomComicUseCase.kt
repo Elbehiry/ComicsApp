@@ -25,6 +25,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
+/**
+ * Get random comic using [GetRandomComicUseCase.Params] [Comic.num] value.
+ */
 class GetRandomComicUseCase @Inject constructor(
     private val comicsRepository: ComicsRepository,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher

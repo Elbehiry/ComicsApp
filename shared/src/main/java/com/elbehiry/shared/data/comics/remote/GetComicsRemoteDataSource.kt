@@ -23,6 +23,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+/**
+ * Remote data source to get comics.
+ */
 class GetComicsRemoteDataSource @Inject constructor(
     private val api: ComicsApi,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO

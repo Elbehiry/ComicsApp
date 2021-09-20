@@ -22,6 +22,9 @@ import com.elbehiry.shared.domain.UseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Inject
 
+/**
+ * Delete comic from database using [Int] comic number.
+ */
 class DeleteComicUseCase @Inject constructor(
     private val dataStore: IComicsLocalDataStore,
     @IoDispatcher ioDispatcher: CoroutineDispatcher

@@ -25,6 +25,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
+/**
+ * Get details comic using [GetComicDetailsUseCase.Params] comic number value.
+ */
 class GetComicDetailsUseCase @Inject constructor(
     private val comicsRepository: ComicsRepository,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher

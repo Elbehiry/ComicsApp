@@ -32,6 +32,9 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * View model for search screen.
+ */
 @HiltViewModel
 class SearchComicViewModel @Inject constructor(
     private val searchComicsUseCase: SearchComicsUseCase
@@ -58,6 +61,9 @@ class SearchComicViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Search for comics using [query] value.
+     */
     fun search(query: String) {
         viewModelScope.launch {
             _loading.value = true

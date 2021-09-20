@@ -21,12 +21,14 @@ import com.elbehiry.shared.data.comics.remote.ComicsDataSource
 import com.elbehiry.shared.data.comics.repository.ComicsRepository
 import com.elbehiry.shared.data.comics.repository.GetComicsRepository
 import com.elbehiry.shared.data.db.comics.datasource.IComicsLocalDataStore
+import com.elbehiry.shared.data.pref.repository.DataStoreOperations
 import com.elbehiry.shared.result.data
 import com.elbehiry.test_shared.COMIC_ITEM
 import com.elbehiry.test_shared.MainCoroutineRule
 import com.elbehiry.test_shared.faker
 import com.elbehiry.test_shared.runBlockingTest
 import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.doAnswer
 import com.nhaarman.mockito_kotlin.whenever
 import org.junit.Assert
 import org.junit.Before
@@ -44,18 +46,24 @@ class ComicsRepositoryTest {
 
     @Mock
     private lateinit var comicsDataSource: ComicsDataSource
+
     @Mock
     private lateinit var getComicsLocalDataStore: IComicsLocalDataStore
+
+    @Mock
+    private lateinit var dataStoreSource: DataStoreOperations
     private lateinit var comicsRepository: ComicsRepository
 
     @Before
     fun setup() {
-        comicsRepository = GetComicsRepository(comicsDataSource, getComicsLocalDataStore)
+        comicsRepository =
+            GetComicsRepository(comicsDataSource, getComicsLocalDataStore, dataStoreSource)
     }
 
     @Test
     fun `test get comics should call data source get comics and return successful`() {
         coroutineRule.runBlockingTest {
+            doAnswer { }.`when`(dataStoreSource).save(any(), any())
             whenever(comicsDataSource.getComic()).thenReturn(COMIC_ITEM)
             comicsRepository.getComic().test {
                 Assert.assertEquals(expectItem().data, COMIC_ITEM)
@@ -78,6 +86,7 @@ class ComicsRepositoryTest {
             Mockito.verify(getComicsLocalDataStore).getComicByNum(any())
         }
     }
+
     @Test
     fun `test get specific comics should call the service if comic not saved from the database`() {
         coroutineRule.runBlockingTest {

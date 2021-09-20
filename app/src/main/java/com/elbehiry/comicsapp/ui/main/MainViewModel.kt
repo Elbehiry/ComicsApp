@@ -41,6 +41,9 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * View model for main screen.
+ */
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val getComicUseCase: GetComicUseCase,
@@ -96,12 +99,18 @@ class MainViewModel @Inject constructor(
         getMostRecentComic()
     }
 
+    /**
+     * Fetch the most recent available comic online.
+     */
     private fun getMostRecentComic() {
         viewModelScope.launch {
             getComics.emit(FetchType.MostRecent)
         }
     }
 
+    /**
+     * Get random comic using comic [num] value.
+     */
     fun getRandomComic(num: Int) {
         viewModelScope.launch {
             getComics.emit(FetchType.Random(num))
@@ -109,6 +118,10 @@ class MainViewModel @Inject constructor(
     }
 }
 
+/**
+ * This [sealed] class helps to indicate the type of call.
+ * Actually this helps to create(merge) just one flow for both calls.
+ */
 sealed class FetchType {
     object MostRecent : FetchType()
     class Random(val comicNum: Int) : FetchType()
