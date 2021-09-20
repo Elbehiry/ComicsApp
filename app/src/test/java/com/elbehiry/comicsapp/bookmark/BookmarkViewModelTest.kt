@@ -69,7 +69,7 @@ class BookmarkViewModelTest {
 
             bookmarkViewModel.state.test {
                 val expectedItem = expectItem()
-                assertThat(expectedItem.recipes).isEqualTo(COMICS_ITEMS)
+                assertThat(expectedItem.comics).isEqualTo(COMICS_ITEMS)
                 assertThat(expectedItem.isEmpty).isFalse()
             }
         }
@@ -86,7 +86,7 @@ class BookmarkViewModelTest {
 
             bookmarkViewModel.state.test {
                 val expectedItem = expectItem()
-                assertThat(expectedItem.recipes).isEmpty()
+                assertThat(expectedItem.comics).isEmpty()
                 assertThat(expectedItem.isEmpty).isTrue()
             }
         }
@@ -103,7 +103,7 @@ class BookmarkViewModelTest {
 
             bookmarkViewModel.state.test {
                 val expectedItem = expectItem()
-                assertThat(expectedItem.recipes).isEmpty()
+                assertThat(expectedItem.comics).isEmpty()
                 assertThat(expectedItem.isEmpty).isTrue()
             }
         }
@@ -118,7 +118,7 @@ class BookmarkViewModelTest {
                 deletedComicsUseCase
             )
 
-            bookmarkViewModel.deleteRecipe(COMIC_ITEM)
+            bookmarkViewModel.deleteComic(COMIC_ITEM)
             coVerify { deletedComicsUseCase(COMIC_ITEM.num) }
         }
     }
