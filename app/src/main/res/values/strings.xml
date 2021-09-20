@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">ComicsApp</string>
+    <string name="comic">Comic</string>
+    <string name="book_mark">Book Mark</string>
+    <string name="no_search_result">No search result</string>
+    <string name="get_random_comic">Get Random Comic</string>
+    <string name="something_went_wrong">Something Went Wrong</string>
+    <string name="try_again_later">Try again later</string>
+    <string name="share">Share</string>
+    <string name="details">Details</string>
+    <string name="explanation">Explanation</string>
+    <string name="save">Save</string>
+    <string name="book_mark_empty">The book mark list is empty, let\'s start add some!</string>
+    <string name="search_hint">Search by query or number</string>
+    <string name="search">Search</string>
+    <string name="BoomMark">BookMark</string>
 </resources>

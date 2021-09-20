@@ -27,7 +27,9 @@ val glide = "4.9.0"
 val gson = "2.8.6"
 val hamcrest = "1.3"
 val hilt = Versions.HILT
+val hiltNavigation = "1.0.0-alpha03"
 val hiltJetPack = "1.0.0-alpha01"
+val hiltWorker = "1.0.0"
 val junit = "4.13"
 val assertJVersion = "3.19.0"
 val mockkVersion = "1.10.6"
@@ -35,13 +37,12 @@ val junitExt = "1.1.2"
 val lifecycle = "2.3.1"
 val lifecycleExt = "2.2.0"
 val material = "1.1.0"
-val mockito = "3.3.1"
+val mockito = "3.11.2"
 val mockitoKotlin = "1.5.0"
 val okhttp = "3.10.0"
 val room = "2.2.6"
 val rules = "1.1.1"
 val runner = "1.2.0"
-val threetenabp = "1.0.5"
 val timber = "4.7.1"
 val viewpager2 = "1.0.0"
 val archTesting = "2.0.0"
@@ -61,9 +62,7 @@ val appCompat = "1.2.0-rc01"
 val faker = "1.0.2"
 val binder = "1.0.0-alpha01"
 val turbine = "0.5.2"
-val playServiceLocation = "18.0.0"
-val googlePlayServicesMapsKtx = "3.0.0"
-val googlePlayServicesVision = "17.0.2"
+val worker = "2.6.0"
 
 dependencies {
     constraints {
@@ -83,7 +82,9 @@ dependencies {
         api("${Libs.HILT_ANDROID}:$hilt")
         api("${Libs.HILT_COMPILER}:$hilt")
         api("${Libs.HILT_TESTING}:$hilt")
+        api("${Libs.HILT_NAVIGATION}:$hiltNavigation")
         api("${Libs.HILT_VIEWMODEL}:$hiltJetPack")
+        api("${Libs.HILT_WORKER}:$hiltWorker")
         api("${Libs.JUNIT}:$junit")
         api("${Libs.ASSERT_J}:$assertJVersion")
         api("${Libs.MOCKK}:$mockkVersion")
@@ -142,6 +143,8 @@ dependencies {
         api("${Libs.HILT_BINDER}:$binder")
         api("${Libs.HILT_BINDER_COMPILER}:$binder")
         api("${Libs.TURBINE}:$turbine")
+        api("${Libs.WORKER}:$worker")
+        api("${Libs.WORKER_EXT}:$worker")
     }
 }
 

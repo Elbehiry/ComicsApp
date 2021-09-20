@@ -17,6 +17,8 @@ object Libs {
     const val HILT_VIEWMODEL = "androidx.hilt:hilt-lifecycle-viewmodel"
     const val HILT_COMPILER = "com.google.dagger:hilt-android-compiler"
     const val HILT_TESTING = "com.google.dagger:hilt-android-testing"
+    const val HILT_NAVIGATION = "androidx.hilt:hilt-navigation-compose"
+    const val HILT_WORKER = "androidx.hilt:hilt-work"
     const val JUNIT = "junit:junit"
     const val ASSERT_J = "org.assertj:assertj-core"
     const val MOCKK = "io.mockk:mockk"
@@ -74,4 +76,6 @@ object Libs {
     const val HILT_BINDER = "com.paulrybitskyi:hilt-binder"
     const val HILT_BINDER_COMPILER = "com.paulrybitskyi:hilt-binder-compiler"
     const val TURBINE = "app.cash.turbine:turbine"
+    const val WORKER = "androidx.work:work-runtime"
+    const val WORKER_EXT = "androidx.work:work-runtime-ktx"
 }
