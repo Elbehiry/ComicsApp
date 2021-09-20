@@ -17,6 +17,7 @@
 package com.elbehiry.comicsapp.ui.details
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -56,6 +57,7 @@ import com.elbehiry.comicsapp.ui.widget.LoadingContent
 import com.elbehiry.comicsapp.ui.widget.NetworkImage
 import com.elbehiry.model.Comic
 
+@ExperimentalAnimationApi
 @Composable
 fun ComicsDetails(
     comicId: Int,

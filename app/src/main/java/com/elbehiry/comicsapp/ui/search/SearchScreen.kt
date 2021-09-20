@@ -17,6 +17,7 @@
 package com.elbehiry.comicsapp.ui.search
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -54,6 +55,7 @@ import com.elbehiry.comicsapp.ui.widget.NetworkImage
 import com.elbehiry.comicsapp.ui.widget.SearchAppBar
 import com.elbehiry.model.Comic
 
+@ExperimentalAnimationApi
 @Composable
 fun SearchScreen(
     navController: NavController,
@@ -102,6 +104,7 @@ fun SearchScreen(
     }
 }
 
+@ExperimentalAnimationApi
 @Composable
 fun SearchHeaderItem(
     navController: NavController,

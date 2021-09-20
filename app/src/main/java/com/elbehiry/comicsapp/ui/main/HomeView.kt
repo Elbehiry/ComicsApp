@@ -17,6 +17,8 @@
 package com.elbehiry.comicsapp.ui.main
 
 import androidx.annotation.StringRes
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.material.MaterialTheme
@@ -48,6 +50,8 @@ import com.elbehiry.comicsapp.ui.main.comics.ComicsView
 import com.elbehiry.model.Comic
 import com.google.accompanist.insets.navigationBarsPadding
 
+@ExperimentalFoundationApi
+@ExperimentalAnimationApi
 @Composable
 fun HomeView(
     onDetails: (Int) -> Unit,

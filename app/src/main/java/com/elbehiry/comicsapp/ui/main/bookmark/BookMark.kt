@@ -17,6 +17,8 @@
 package com.elbehiry.comicsapp.ui.main.bookmark
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
@@ -28,6 +30,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.elbehiry.comicsapp.R
 import com.elbehiry.comicsapp.ui.widget.EmptyView
 
+@ExperimentalAnimationApi
+@ExperimentalFoundationApi
 @Composable
 fun BookMark(
     onDetails: (Int) -> Unit

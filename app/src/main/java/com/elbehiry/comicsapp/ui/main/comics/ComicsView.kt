@@ -17,6 +17,7 @@
 package com.elbehiry.comicsapp.ui.main.comics
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -28,6 +29,7 @@ import com.elbehiry.comicsapp.ui.widget.EmptyView
 import com.elbehiry.comicsapp.ui.widget.LoadingContent
 import com.elbehiry.model.Comic
 
+@ExperimentalAnimationApi
 @Composable
 fun ComicsView(
     onShare: (Comic?) -> Unit,

@@ -16,6 +16,8 @@
 
 package com.elbehiry.comicsapp.ui.navigation
 
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavBackStackEntry
@@ -37,6 +39,8 @@ object MainDestinations {
     const val COMIC_DETAIL_ID_KEY = "comicId"
 }
 
+@ExperimentalAnimationApi
+@ExperimentalFoundationApi
 @Composable
 fun NavGraph(
     startDestination: String = MainDestinations.Home_ROUTE,
