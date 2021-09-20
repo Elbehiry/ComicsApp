@@ -25,6 +25,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
+/**
+ * Get the most recent available comic.
+ */
 class GetComicUseCase @Inject constructor(
     private val comicsRepository: ComicsRepository,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher

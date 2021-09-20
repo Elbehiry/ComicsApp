@@ -23,6 +23,9 @@ import com.elbehiry.shared.domain.UseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Inject
 
+/**
+ * Save/Delete comic using [Comic] value.
+ */
 class ToggleSavedComicUseCase @Inject constructor(
     private val dataStore: IComicsLocalDataStore,
     @IoDispatcher ioDispatcher: CoroutineDispatcher

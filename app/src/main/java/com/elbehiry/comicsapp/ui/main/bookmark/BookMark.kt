@@ -33,17 +33,17 @@ fun BookMark(
     onDetails: (Int) -> Unit
 ) {
     val viewModel = hiltViewModel<BookmarkViewModel>()
-    val recipes by viewModel.state.collectAsState()
+    val comics by viewModel.state.collectAsState()
     LazyVerticalGrid(cells = GridCells.Fixed(2)) {
-        items(recipes.recipes.distinct()) { recipe ->
-            recipe.saved = true
-            ComicCachedItem(recipe, onDetails = onDetails) {
-                viewModel.deleteRecipe(recipe)
+        items(comics.comics.distinct()) { comic ->
+            comic.saved = true
+            ComicCachedItem(comic, onDetails = onDetails) {
+                viewModel.deleteComic(comic)
             }
         }
     }
 
-    AnimatedVisibility(visible = recipes.isEmpty) {
+    AnimatedVisibility(visible = comics.isEmpty) {
         EmptyView(
             descText = stringResource(id = R.string.book_mark_empty)
         )

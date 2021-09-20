@@ -46,6 +46,10 @@ class MainApplication : Application(), Configuration.Provider {
         initWorker()
     }
 
+    /**
+     * Initialize the notification worker to check if there is any new comic available.
+     * With constraint if the network is connected.
+     */
     private fun initWorker() {
         WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(
             "comicNotificationWorker",

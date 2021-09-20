@@ -16,4 +16,7 @@
 
 package com.elbehiry.shared.utils
 
+/**
+ * Check if the [String] value is [Int] or [String].
+ */
 fun String.intOrString() = toIntOrNull() ?: this

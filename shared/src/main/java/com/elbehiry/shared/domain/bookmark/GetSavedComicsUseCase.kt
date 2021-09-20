@@ -25,6 +25,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
+/**
+ * Get all comics from database.
+ */
 class GetSavedComicsUseCase @Inject constructor(
     private val dataStore: IComicsLocalDataStore,
     @IoDispatcher ioDispatcher: CoroutineDispatcher
