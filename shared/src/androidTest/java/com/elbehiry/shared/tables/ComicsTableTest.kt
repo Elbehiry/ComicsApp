@@ -50,7 +50,7 @@ class ComicsTableTest {
             val comic = COMIC_ENTITY
             recipeTable.saveComic(comic)
             val savedRecipe = recipeTable.getComic(comic.comicNum)
-            assertThat(savedRecipe).isEqualTo(comic)
+            assertThat(savedRecipe?.comicNum).isEqualTo(comic.comicNum)
         }
     }
 
