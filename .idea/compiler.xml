@@ -2,6 +2,9 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel target="1.8">
+      <module name="ComicApp.app" target="11" />
+      <module name="ComicApp.buildSrc" target="11" />
+      <module name="ComicApp.shared" target="11" />
       <module name="ComicsApp.app" target="11" />
       <module name="ComicsApp.buildSrc" target="11" />
       <module name="ComicsApp.shared" target="11" />
