@@ -127,6 +127,7 @@ dependencies {
     implementation(Libs.WORKER_EXT)
 
     androidTestImplementation(Libs.COMPOSE_TEST)
+    implementation("com.github.chuckerteam.chucker:library:3.5.2")
 
     // test flow
     testImplementation(Libs.TURBINE)

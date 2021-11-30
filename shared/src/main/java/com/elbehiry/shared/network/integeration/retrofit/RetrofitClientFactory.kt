@@ -1,15 +1,27 @@
 package com.elbehiry.shared.network.integeration.retrofit
 
+import android.content.Context
 import com.elbehiry.shared.network.client.ClientConfig
-import com.elbehiry.shared.network.features.*
-import com.elbehiry.shared.network.integeration.retrofit.features.*
+import com.elbehiry.shared.network.features.Authenticator
+import com.elbehiry.shared.network.features.BaseUrl
+import com.elbehiry.shared.network.features.CertificatePinner
+import com.elbehiry.shared.network.features.Chuck
+import com.elbehiry.shared.network.features.FeatureFactory
+import com.elbehiry.shared.network.features.ResponseValidator
+import com.elbehiry.shared.network.features.TimeOuts
 import com.elbehiry.shared.network.integeration.Factory
+import com.elbehiry.shared.network.integeration.retrofit.features.AuthIntegration
+import com.elbehiry.shared.network.integeration.retrofit.features.BaseUrlIntegration
+import com.elbehiry.shared.network.integeration.retrofit.features.CertificateIntegration
+import com.elbehiry.shared.network.integeration.retrofit.features.ChuckIntegration
+import com.elbehiry.shared.network.integeration.retrofit.features.ResponseValidatorIntegration
+import com.elbehiry.shared.network.integeration.retrofit.features.TimeOutsIntegration
 import retrofit2.Retrofit
 
-class RetrofitClientFactory : Factory<Retrofit, RetrofitHttpClient> {
+class RetrofitClientFactory(val appContext: Context) : Factory<Retrofit, RetrofitHttpClient> {
 
     override val config: ClientConfig<Retrofit>
-        get() = RetrofitConfig()
+        get() = RetrofitConfig().apply { context = appContext }
 
     override fun create(engine: Retrofit): RetrofitHttpClient =
         RetrofitHttpClient(engine)

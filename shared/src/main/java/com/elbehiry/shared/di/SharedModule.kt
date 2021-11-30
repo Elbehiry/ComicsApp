@@ -63,7 +63,7 @@ class SharedModule {
         DataStoreLocalSource(dataStore)
 
     @Provides
-    fun provideNetwork(): RetrofitHttpClient = Network.initialize(RetrofitClientFactory()) {
+    fun provideNetwork(@ApplicationContext context: Context): RetrofitHttpClient = Network.initialize(RetrofitClientFactory(context)) {
         install(RetrofitClientFactory.BaseUrlFactory(BuildConfig.xkcd_BASE_URL))
         install(RetrofitClientFactory.ChuckFactory())
         install(RetrofitClientFactory.TimeOutsFactory()) {

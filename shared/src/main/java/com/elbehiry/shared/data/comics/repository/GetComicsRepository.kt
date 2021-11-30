@@ -36,7 +36,9 @@ class GetComicsRepository @Inject constructor(
 ) : ComicsRepository {
     override fun getComic(): Flow<Result<Comic>> {
         return flow {
-            comicsDataSource.getComic().fold({
+            val result = comicsDataSource.getComic()
+
+            result.fold({
                 dataStoreSource.save(PreferencesKeys.mostRecentComicNum, it.num ?: 0)
                 emit(Result.Success(it))
             }, {
@@ -69,10 +71,10 @@ class GetComicsRepository @Inject constructor(
     override fun getRandomComic(comicNum: Int): Flow<Result<Comic>> = flow {
         emit(Result.Loading)
         comicsDataSource.getRandomComic(comicNum).fold({
-                emit(Result.Success(it))
-            }, {
-                emit(Result.Error(Exception(it)))
-            }
+            emit(Result.Success(it))
+        }, {
+            emit(Result.Error(Exception(it)))
+        }
         )
     }
 }

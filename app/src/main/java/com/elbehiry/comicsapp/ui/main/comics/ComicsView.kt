@@ -35,6 +35,8 @@ fun ComicsView(
     onShare: (Comic?) -> Unit,
     onDetails: (Int) -> Unit
 ) {
+
+
     val viewModel = hiltViewModel<MainViewModel>()
     val comic by viewModel.comic.collectAsState()
     val loading by viewModel.isLoading.collectAsState()

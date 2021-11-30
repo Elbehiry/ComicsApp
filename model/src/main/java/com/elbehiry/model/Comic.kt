@@ -57,5 +57,42 @@ data class Comic(
     val safeTitle: String? = null,
 
     @Transient
-    var saved: Boolean = false
+    var saved: Boolean? = false
+)
+
+@Serializable
+data class Comic2(
+
+    @Json(name = "news")
+    val news: String? = null,
+
+    @Json(name = "img")
+    val img: String? = null,
+
+    @Json(name = "transcript")
+    val transcript: String? = null,
+
+    @Json(name = "month")
+    val month: String? = null,
+
+    @Json(name = "year")
+    val year: String? = null,
+
+    @Json(name = "num")
+    val num: Int? = null,
+
+    @Json(name = "link")
+    val link: String? = null,
+
+    @Json(name = "alt")
+    val alt: String? = null,
+
+    @Json(name = "title")
+    val title: String? = null,
+
+    @Json(name = "day")
+    val day: String? = null,
+
+    @Json(name = "safe_title")
+    val safeTitle: String? = null,
 )

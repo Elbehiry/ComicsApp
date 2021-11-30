@@ -86,9 +86,9 @@ fun ComicCachedItem(
                         .padding(8.dp),
                     onBookMark = {
                         onBookMark()
-                        comic.saved = !comic.saved
+                        comic.saved = !comic.saved!!
                     },
-                    selected = comic.saved
+                    selected = comic.saved!!
                 )
             }
         }

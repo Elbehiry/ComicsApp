@@ -19,19 +19,31 @@ package com.elbehiry.shared.data.comics.remote
 import com.elbehiry.model.Comic
 import com.elbehiry.shared.network.integeration.retrofit.RetrofitHttpClient
 import com.elbehiry.shared.network.request.get
+import com.elbehiry.shared.network.request.post
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.Serializable
 import javax.inject.Inject
 
 /**
  * Remote data source to get comics.
  */
+@Serializable
+data class D(val id:Int)
 class GetComicsRemoteDataSource @Inject constructor(
     private val client: RetrofitHttpClient,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ComicsDataSource {
     override suspend fun getComic(): Result<Comic> = withContext(ioDispatcher) {
+        val res2:Result<Comic> = client.get("https://dindinntask.getsandbox.com/orders"){
+            headers = mapOf("application/json" to "Content-Type")
+        }
+
+        val res:Result<D> = client.post("https://dindinntask.getsandbox.com/test_post",D(1)){
+            headers = mapOf("application/json" to "Content-Type")
+
+        }
         client.get(
             url = "info.0.json"
         ) {
@@ -43,7 +55,6 @@ class GetComicsRemoteDataSource @Inject constructor(
         client.get(
             url = "${Result}/info.0.json"
         ) {
-
         }
     }
 }

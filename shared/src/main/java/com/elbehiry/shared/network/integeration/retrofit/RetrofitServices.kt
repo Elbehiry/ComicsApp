@@ -1,31 +1,32 @@
 package com.elbehiry.shared.network.integeration.retrofit
 
-import kotlinx.serialization.json.JsonObject
-import retrofit2.Call
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.FieldMap
+import retrofit2.http.FormUrlEncoded
+import retrofit2.http.GET
+import retrofit2.http.HeaderMap
+import retrofit2.http.POST
+import retrofit2.http.QueryMap
+import retrofit2.http.Url
 
 @JvmSuppressWildcards
 interface RetrofitServices {
-
-
     @GET
-    fun get(
+    suspend fun get(
         @Url url: String,
-        @QueryMap map: @JvmSuppressWildcards Map<String, String> = emptyMap(),
-        @Tag fullApiResponse: Boolean = false
-    ): Call<String>
+        @QueryMap map: @JvmSuppressWildcards Map<String, String> = emptyMap()
+    ): String
 
     @POST
-    fun <REQ, RES> post(
+    suspend fun post(
         @Url url: String,
-        @Body body: REQ,
-        @Tag fullApiResponse: Boolean = false,
-    ): RES
+        @Body body: String,
+        @HeaderMap headers: Map<String, String>
+    ): String
 
     @FormUrlEncoded
-    fun <R> form(
+    suspend fun form(
         @Url url: String,
-        @FieldMap map: Map<String, Any>,
-        @Tag fullApiResponse: Boolean = false,
-    ): R
+        @FieldMap map: Map<String, Any>
+    ): String
 }

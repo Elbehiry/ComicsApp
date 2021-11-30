@@ -12,12 +12,12 @@ class StringConverterFactory : Converter.Factory() {
         type: Type,
         annotations: Array<out Annotation>,
         retrofit: Retrofit
-    ): Converter<ResponseBody, *>? {
+    ): Converter<ResponseBody, String> {
         return StringResponseBodyConverter()
     }
 
     class StringResponseBodyConverter : Converter<ResponseBody, String> {
-        override fun convert(value: ResponseBody): String? {
+        override fun convert(value: ResponseBody): String {
             return value.string()
         }
     }

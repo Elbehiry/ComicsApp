@@ -40,14 +40,14 @@ class NotificationWorker @AssistedInject constructor(
 ) : CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {
-        val recentComic = api.getComic()
-        val savedComicNum = dataStoreOperations.read(PreferencesKeys.mostRecentComicNum)
-        recentComic.num?.let { num ->
-            if (num > savedComicNum) {
-                NotificationUtils.showNotification(recentComic, applicationContext)
-                return Result.success()
-            }
-        }
-        return Result.failure()
+//        val recentComic = api.getComic()
+//        val savedComicNum = dataStoreOperations.read(PreferencesKeys.mostRecentComicNum)
+//        recentComic.num?.let { num ->
+//            if (num > savedComicNum) {
+//                NotificationUtils.showNotification(recentComic, applicationContext)
+//                return Result.success()
+//            }
+//        }
+        return Result.success()
     }
 }
