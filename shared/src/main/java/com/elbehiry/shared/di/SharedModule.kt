@@ -24,6 +24,10 @@ import com.elbehiry.shared.BuildConfig
 import com.elbehiry.shared.data.pref.repository.DataStoreOperations
 import com.elbehiry.shared.data.pref.repository.DataStoreLocalSource
 import com.elbehiry.shared.data.remote.ComicsApi
+import com.elbehiry.shared.network.Network
+import com.elbehiry.shared.network.features.Chuck
+import com.elbehiry.shared.network.integeration.retrofit.RetrofitClientFactory
+import com.elbehiry.shared.network.integeration.retrofit.RetrofitHttpClient
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -58,44 +62,15 @@ class SharedModule {
     fun provideDataStoreSource(dataStore: DataStore<Preferences>): DataStoreOperations =
         DataStoreLocalSource(dataStore)
 
-    @Singleton
     @Provides
-    @Named("logging")
-    internal fun provideHttpLoggingInterceptor(): Interceptor =
-        HttpLoggingInterceptor { message ->
-            Timber.d(message)
-        }.setLevel(HttpLoggingInterceptor.Level.BODY)
-
-    @Singleton
-    @Provides
-    fun provideOkHttp(
-        @Named("logging") httpLoggingInterceptor: Interceptor
-    ): OkHttpClient {
-        return OkHttpClient.Builder()
-            .connectTimeout(10L, TimeUnit.SECONDS)
-            .writeTimeout(10L, TimeUnit.SECONDS)
-            .readTimeout(30L, TimeUnit.SECONDS)
-            .addInterceptor(httpLoggingInterceptor)
-            .build()
+    fun provideNetwork(): RetrofitHttpClient = Network.initialize(RetrofitClientFactory()) {
+        install(RetrofitClientFactory.BaseUrlFactory(BuildConfig.xkcd_BASE_URL))
+        install(RetrofitClientFactory.ChuckFactory())
+        install(RetrofitClientFactory.TimeOutsFactory()) {
+            connectTimeInMills = 5000L
+            readTimeInMills = 5000L
+            writeTimeInMills = 10000L
+        }
+        install(RetrofitClientFactory.ChuckFactory())
     }
-
-    @Provides
-    @Singleton
-    fun provideMoshi() = Moshi.Builder()
-        .add(KotlinJsonAdapterFactory())
-        .build()
-
-    @Provides
-    @Singleton
-    fun provideRetroFit(okHttpClient: OkHttpClient, moshi: Moshi): Retrofit =
-        Retrofit.Builder()
-            .baseUrl(BuildConfig.xkcd_BASE_URL)
-            .client(okHttpClient)
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
-            .build()
-
-    @Singleton
-    @Provides
-    fun provideComicsApiApi(retrofit: Retrofit): ComicsApi =
-        retrofit.create(ComicsApi::class.java)
 }

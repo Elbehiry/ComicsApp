@@ -19,6 +19,7 @@ plugins {
     kotlin("android")
     kotlin("kapt")
     id("dagger.hilt.android.plugin")
+    kotlin("plugin.serialization") version "1.5.31"
 }
 
 android {
@@ -136,4 +137,9 @@ dependencies {
     androidTestImplementation(Libs.ROOM_TESTING)
     androidTestImplementation(Libs.COROUTINES_TEST)
     androidTestImplementation(Libs.FAKER)
+
+    implementation("com.github.chuckerteam.chucker:library:3.5.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.1")
+    implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
+    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0")
 }

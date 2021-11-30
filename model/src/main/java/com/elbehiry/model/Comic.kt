@@ -17,7 +17,10 @@
 package com.elbehiry.model
 
 import com.squareup.moshi.Json
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
+@Serializable
 data class Comic(
 
     @Json(name = "news")
@@ -52,5 +55,7 @@ data class Comic(
 
     @Json(name = "safe_title")
     val safeTitle: String? = null,
+
+    @Transient
     var saved: Boolean = false
 )

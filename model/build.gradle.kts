@@ -17,6 +17,7 @@
 plugins {
     id("java-library")
     kotlin("jvm")
+    kotlin("plugin.serialization") version "1.5.31"
 }
 
 dependencies {
@@ -26,6 +27,7 @@ dependencies {
     // ThreeTenBP for the shared module only. Date and time API for Java.
     implementation(Libs.KOTLIN_STDLIB)
     implementation(Libs.MOSHI)
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.1")
 }
 
 java {

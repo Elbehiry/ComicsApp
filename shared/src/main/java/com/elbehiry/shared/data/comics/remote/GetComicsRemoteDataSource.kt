@@ -17,7 +17,8 @@
 package com.elbehiry.shared.data.comics.remote
 
 import com.elbehiry.model.Comic
-import com.elbehiry.shared.data.remote.ComicsApi
+import com.elbehiry.shared.network.integeration.retrofit.RetrofitHttpClient
+import com.elbehiry.shared.network.request.get
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -27,14 +28,22 @@ import javax.inject.Inject
  * Remote data source to get comics.
  */
 class GetComicsRemoteDataSource @Inject constructor(
-    private val api: ComicsApi,
+    private val client: RetrofitHttpClient,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ComicsDataSource {
-    override suspend fun getComic(): Comic = withContext(ioDispatcher) {
-        api.getComic()
+    override suspend fun getComic(): Result<Comic> = withContext(ioDispatcher) {
+        client.get(
+            url = "info.0.json"
+        ) {
+
+        }
     }
 
-    override suspend fun getRandomComic(comicNum: Int): Comic = withContext(ioDispatcher) {
-        api.getRandomComic(comicNum)
+    override suspend fun getRandomComic(comicNum: Int): Result<Comic> = withContext(ioDispatcher) {
+        client.get(
+            url = "${Result}/info.0.json"
+        ) {
+
+        }
     }
 }
