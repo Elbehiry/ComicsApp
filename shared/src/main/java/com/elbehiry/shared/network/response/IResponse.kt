@@ -7,6 +7,6 @@ interface IResponse {
     fun protocol(): String
     fun code(): Int
     fun message(): String?
-    fun headers(): Map<String, String>
+    fun headers(): Map<String, List<String>>
     fun body(): String?
 }
