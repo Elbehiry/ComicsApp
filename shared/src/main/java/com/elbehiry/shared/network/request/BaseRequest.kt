@@ -72,22 +72,10 @@ suspend inline fun <reified REQ, reified RES : Any> HttpClient<*>.post(
     }
 }
 
-suspend inline fun <reified REQ, reified RES : Any> HttpClient<*>.refresh(
+suspend inline fun <reified REQ, reified RES : Any> HttpClient<*>.postOrNull(
     url: String,
     body: REQ,
     builder: PostRequest.() -> Unit = {},
-): RES {
-    return try {
-        val request =
-            PostRequest(url, Json { ignoreUnknownKeys = true }.encodeToString(body)).apply(builder)
-        val response = call(request)
-        val obj = Json { ignoreUnknownKeys = true }.decodeFromString<RES>(response)
-        obj
-    } catch (e: Throwable) {
-        val exception = when (e) {
-            is SerializationException -> NanaException.ServerException(e)
-            else -> e
-        }
-        throw exception
-    }
+): RES? {
+    return post<REQ, RES>(url, body, builder).getOrNull()
 }

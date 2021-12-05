@@ -26,7 +26,7 @@ import com.elbehiry.shared.data.pref.repository.DataStoreOperations
 import com.elbehiry.shared.network.Network
 import com.elbehiry.shared.network.integeration.retrofit.RetrofitClientFactory
 import com.elbehiry.shared.network.integeration.retrofit.RetrofitHttpClient
-import com.elbehiry.shared.network.request.refresh
+import com.elbehiry.shared.network.request.postOrNull
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -105,13 +105,13 @@ class SharedModule {
             install(RetrofitClientFactory.AuthenticatorFactory()) {
                 authenticate = { response ->
                     val result = runBlocking {
-                        client.refresh<TokenRefresh, TokenRefresh>(
+                        client.postOrNull<TokenRefresh, TokenRefresh>(
                             "https://dindinntask.getsandbox.com/refresh",
                             TokenRefresh("TTTTTTTTTCASDASLDLASLD")
                         )
 
                     }
-                    response.addRequestHeader("auth" to result.token)
+                    response.addRequestHeader("auth" to result!!.token)
 
                     response
                 }
