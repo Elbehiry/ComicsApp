@@ -26,18 +26,18 @@ import com.elbehiry.shared.data.pref.repository.DataStoreOperations
 import com.elbehiry.shared.network.Network
 import com.elbehiry.shared.network.integeration.retrofit.RetrofitClientFactory
 import com.elbehiry.shared.network.integeration.retrofit.RetrofitHttpClient
-import com.elbehiry.shared.network.request.post
+import com.elbehiry.shared.network.request.refresh
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 import javax.inject.Singleton
 
 const val dataStoreName = "ComicsDataStore"
+
 @Serializable
 class TokenRefresh(val token: String)
 
@@ -68,6 +68,20 @@ class SharedModule {
                     nanaException
                 }
             }
+            install(RetrofitClientFactory.TimeOutsFactory()) {
+                connectTimeInMills = 5000L
+                readTimeInMills = 5000L
+                writeTimeInMills = 10000L
+            }
+            install(RetrofitClientFactory.InterceptionFactory()) {
+                onSend = {
+                    it.addHeader("Content-Type" to "application/json")
+                    it
+                }
+                onReceive = {
+                    it
+                }
+            }
 
         }
         return Network.initialize(RetrofitClientFactory(context)) {
@@ -89,23 +103,24 @@ class SharedModule {
             }
 
             install(RetrofitClientFactory.AuthenticatorFactory()) {
-                authenticate = {
-                    val token: Result<TokenRefresh> = runBlocking(IO) {
-                            client.post("https://dindinntask.getsandbox.com/refresh", TokenRefresh("TTTTTTTTTCASDASLDLASLD"))
+                authenticate = { response ->
+                    val result = runBlocking {
+                        client.refresh<TokenRefresh, TokenRefresh>(
+                            "https://dindinntask.getsandbox.com/refresh",
+                            TokenRefresh("TTTTTTTTTCASDASLDLASLD")
+                        )
+
                     }
-                    it.addRequestHeader(("auth" to  (token.getOrNull()?.token?:"")))
-                    it
+                    response.addRequestHeader("auth" to result.token)
+
+                    response
                 }
             }
 
-            install(RetrofitClientFactory.CertificateFactory()) {
-                host = ""
-                certificate = emptyList()
-            }
 
             install(RetrofitClientFactory.ResponseValidatorFactory()) {
                 validator = { nanaException ->
-                   nanaException
+                    nanaException
                 }
             }
         }
