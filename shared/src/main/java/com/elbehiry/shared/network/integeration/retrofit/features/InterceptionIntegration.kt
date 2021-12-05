@@ -10,10 +10,10 @@ class InterceptionIntegration : FeatureIntegration<Interception, RetrofitConfig>
     override fun integrate(feature: Interception, clientConfig: RetrofitConfig) {
         clientConfig.okHttpClient.addInterceptor {
             val request = it.request()
-            feature.onSend(RetrofitRequest(request))
-            val response = it.proceed(request)
-            feature.onReceive(RetrofitResponse(response))
-            response
+            val newRequest = (feature.onSend(RetrofitRequest(request)) as RetrofitRequest).request
+            val response = it.proceed(newRequest)
+            val newResponse = (feature.onReceive(RetrofitResponse(response)) as RetrofitResponse).response
+            newResponse
         }
     }
 }

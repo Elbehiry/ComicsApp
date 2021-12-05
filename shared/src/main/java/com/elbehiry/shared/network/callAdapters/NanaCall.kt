@@ -27,11 +27,6 @@ class NanaCall(
                         )
                     } else {
                         throw IOException()
-//                        //TODO  server issues
-//                        callback.onResponse(
-//                            this@NanaCall,
-//                            Response.success(Result.failure<Throwable>(Throwable()))
-//                        )
                     }
                 }
 

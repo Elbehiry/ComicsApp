@@ -36,16 +36,8 @@ class GetComicsRemoteDataSource @Inject constructor(
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ComicsDataSource {
     override suspend fun getComic(): Result<Comic> = withContext(ioDispatcher) {
-        val res2:Result<Comic> = client.get("https://dindinntask.getsandbox.com/orders"){
-            headers = mapOf("application/json" to "Content-Type")
-        }
-
-        val res:Result<D> = client.post("https://dindinntask.getsandbox.com/test_post",D(1)){
-            headers = mapOf("application/json" to "Content-Type")
-
-        }
         client.get(
-            url = "info.0.json"
+            url = "https://dindinntask.getsandbox.com/orders"
         ) {
 
         }

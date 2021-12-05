@@ -21,28 +21,16 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.createDataStore
 import com.elbehiry.shared.BuildConfig
-import com.elbehiry.shared.data.pref.repository.DataStoreOperations
 import com.elbehiry.shared.data.pref.repository.DataStoreLocalSource
-import com.elbehiry.shared.data.remote.ComicsApi
+import com.elbehiry.shared.data.pref.repository.DataStoreOperations
 import com.elbehiry.shared.network.Network
-import com.elbehiry.shared.network.features.Chuck
 import com.elbehiry.shared.network.integeration.retrofit.RetrofitClientFactory
 import com.elbehiry.shared.network.integeration.retrofit.RetrofitHttpClient
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import okhttp3.Interceptor
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
-import timber.log.Timber
-import java.util.concurrent.TimeUnit
-import javax.inject.Named
 import javax.inject.Singleton
 
 const val dataStoreName = "ComicsDataStore"
@@ -65,7 +53,6 @@ class SharedModule {
     @Provides
     fun provideNetwork(
         @ApplicationContext context: Context
-
     ): RetrofitHttpClient =
         Network.initialize(RetrofitClientFactory(context)) {
             install(RetrofitClientFactory.BaseUrlFactory(BuildConfig.xkcd_BASE_URL))
@@ -75,14 +62,12 @@ class SharedModule {
                 readTimeInMills = 5000L
                 writeTimeInMills = 10000L
             }
-            install(RetrofitClientFactory.ChuckFactory())
             install(RetrofitClientFactory.InterceptionFactory()) {
                 onSend = {
-                    it.addHeader(" " to " ")
+                    it.addHeader("Content-Type" to "application/json")
                     it
                 }
                 onReceive = {
-
                     it
                 }
             }

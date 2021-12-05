@@ -1,6 +1,5 @@
 package com.elbehiry.shared.network.converter
 
-import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Converter
 import retrofit2.Retrofit

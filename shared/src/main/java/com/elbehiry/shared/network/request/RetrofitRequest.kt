@@ -3,7 +3,7 @@ package com.elbehiry.shared.network.request
 import okhttp3.Request
 
 class RetrofitRequest(
-    val request: Request,
+    var request: Request,
 ) : IRequest {
 
     override fun url(): String {
@@ -11,7 +11,7 @@ class RetrofitRequest(
     }
 
     override fun setUrl(url: String) {
-        request.newBuilder().url(url).build()
+        request = request.newBuilder().url(url).build()
     }
 
     override fun method(): String = request.method()
@@ -20,14 +20,14 @@ class RetrofitRequest(
 
     override fun body(): String = request.body().toString()
 
-    override fun addHeader(header : Pair<String,String>) {
-        request.headers().newBuilder().add(header.first,header.second).build()
+    override fun addHeader(header: Pair<String, String>) {
+        request = request.newBuilder().addHeader(header.first, header.second).build()
     }
 
     override fun removeHeader(key: String) {
-        request.headers().newBuilder().removeAll(key)
+        request = request.newBuilder().removeHeader(key).build()
     }
 
-    override fun tags(): Any? =  request.tag()
+    override fun tags(): Any? = request.tag()
 
 }

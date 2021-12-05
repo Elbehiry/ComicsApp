@@ -22,7 +22,6 @@ import com.elbehiry.shared.data.comics.repository.ComicsRepository
 import com.elbehiry.shared.data.comics.repository.GetComicsRepository
 import com.elbehiry.shared.data.db.comics.datasource.IComicsLocalDataStore
 import com.elbehiry.shared.data.pref.repository.DataStoreOperations
-import com.elbehiry.shared.data.remote.ComicsApi
 import com.elbehiry.shared.network.integeration.retrofit.RetrofitHttpClient
 import dagger.Module
 import dagger.Provides
@@ -32,6 +31,7 @@ import dagger.hilt.components.SingletonComponent
 @Module
 @InstallIn(SingletonComponent::class)
 class ComicsModule {
+
     @Provides
     fun provideComicsDataSource(api: RetrofitHttpClient): ComicsDataSource =
         GetComicsRemoteDataSource(api)
