@@ -1,6 +1,8 @@
 package com.elbehiry.shared.network.request
 
 import com.elbehiry.shared.network.client.HttpClient
+import com.elbehiry.shared.network.features.NanaException
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -8,8 +10,7 @@ import kotlinx.serialization.json.Json
 sealed class BaseRequest(
     val url: String,
     var queries: Map<String, String> = emptyMap(),
-    var headers: Map<String, String> = emptyMap(),
-    var fullApiResponse: Boolean = false,
+    var headers: Map<String, String> = emptyMap()
 )
 
 class GetRequest(url: String) : BaseRequest(url)
@@ -27,7 +28,11 @@ suspend inline fun <reified R : Any> HttpClient<*>.get(
         val respo = call(request)
         Result.success(Json { ignoreUnknownKeys = true }.decodeFromString(respo))
     } catch (e: Throwable) {
-        Result.failure(e)
+        val exception = when (e) {
+            is SerializationException -> NanaException.ServerException(e)
+            else -> e
+        }
+        Result.failure(exception)
     }
 }
 
@@ -39,7 +44,11 @@ suspend inline fun <reified R : Any> HttpClient<*>.form(
     return try {
         Result.success(Json.decodeFromString(call(request)))
     } catch (e: Throwable) {
-        Result.failure(e)
+        val exception = when (e) {
+            is SerializationException -> NanaException.ServerException(e)
+            else -> e
+        }
+        Result.failure(exception)
     }
 }
 
@@ -53,6 +62,10 @@ suspend inline fun <reified REQ, reified RES : Any> HttpClient<*>.post(
             PostRequest(url, Json { ignoreUnknownKeys = true }.encodeToString(body)).apply(builder)
         Result.success(Json { ignoreUnknownKeys = true }.decodeFromString(call(request)))
     } catch (e: Throwable) {
-        Result.failure(e)
+        val exception = when (e) {
+            is SerializationException -> NanaException.ServerException(e)
+            else -> e
+        }
+        Result.failure(exception)
     }
 }

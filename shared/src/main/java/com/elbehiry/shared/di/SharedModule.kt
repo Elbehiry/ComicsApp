@@ -24,17 +24,20 @@ import com.elbehiry.shared.BuildConfig
 import com.elbehiry.shared.data.pref.repository.DataStoreLocalSource
 import com.elbehiry.shared.data.pref.repository.DataStoreOperations
 import com.elbehiry.shared.network.Network
+import com.elbehiry.shared.network.features.NanaException
 import com.elbehiry.shared.network.integeration.retrofit.RetrofitClientFactory
 import com.elbehiry.shared.network.integeration.retrofit.RetrofitHttpClient
+import com.elbehiry.shared.network.request.post
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import java.io.IOException
 import javax.inject.Singleton
 
 const val dataStoreName = "ComicsDataStore"
-
+class MyProjectException(override val message:String?): IOException()
 @InstallIn(SingletonComponent::class)
 @Module
 class SharedModule {
@@ -53,8 +56,8 @@ class SharedModule {
     @Provides
     fun provideNetwork(
         @ApplicationContext context: Context
-    ): RetrofitHttpClient =
-        Network.initialize(RetrofitClientFactory(context)) {
+    ): RetrofitHttpClient {
+       return  Network.initialize(RetrofitClientFactory(context)) {
             install(RetrofitClientFactory.BaseUrlFactory(BuildConfig.xkcd_BASE_URL))
             install(RetrofitClientFactory.ChuckFactory())
             install(RetrofitClientFactory.TimeOutsFactory()) {
@@ -83,5 +86,17 @@ class SharedModule {
                 host = ""
                 certificate = emptyList()
             }
+
+            install(RetrofitClientFactory.ResponseValidatorFactory()) {
+                validator = { nanaException ->
+                    when (nanaException) {
+                        is NanaException.ServerException -> MyProjectException(nanaException.message)
+                        is NanaException.NetworkException -> MyProjectException(nanaException.message)
+                        is NanaException.ClientException -> MyProjectException(nanaException.message)
+                        is NanaException.ApiException -> MyProjectException(nanaException.message)
+                    }
+                }
+            }
         }
+    }
 }

@@ -1,42 +1,50 @@
 package com.elbehiry.shared.network.callAdapters
 
+import com.elbehiry.shared.network.features.NanaException
+
+import com.google.android.gms.common.api.ApiException
 import okhttp3.Request
 import okio.Timeout
 import retrofit2.Call
 import retrofit2.Callback
+import retrofit2.HttpException
 import retrofit2.Response
-import java.io.IOException
+import com.elbehiry.shared.network.features.NanaException.ApiException as MyApiException
 
 class NanaCall(
-    val delegate: Call<Any>
-) : Call<String> {
-    override fun clone(): Call<String> = NanaCall(delegate.clone())
+    private val delegate: Call<Any>,
+    private val validator: (NanaException) -> Throwable
+) : Call<Any> {
+    override fun clone(): Call<Any> = NanaCall(delegate.clone(), validator)
 
-    override fun execute(): Response<String> {
+    override fun execute(): Response<Any> {
         throw UnsupportedOperationException()
     }
 
-    override fun enqueue(callback: Callback<String>) {
+    override fun enqueue(callback: Callback<Any>) {
         delegate.enqueue(
             object : Callback<Any> {
                 override fun onResponse(call: Call<Any>, response: Response<Any>) {
                     if (response.isSuccessful) {
                         callback.onResponse(
                             this@NanaCall,
-                            Response.success(response.raw().body()?.string())
+                            Response.success(response.body())
                         )
                     } else {
-                        throw IOException()
+                        callback.onFailure(
+                            call,
+                            validator.invoke(
+                                NanaException.ClientException(
+                                    response.code(),
+                                    response.errorBody()?.string() ?: ""
+                                )
+                            )
+                        )
                     }
                 }
 
                 override fun onFailure(call: Call<Any>, t: Throwable) {
-                    throw Exception(t)
-
-//                    callback.onResponse(
-//                        this@NanaCall,
-//                        Response.success(Result.failure<Throwable>(t))
-//                    )
+                    callback.onFailure(call, validator.invoke(t.toFailure()))
                 }
             }
         )
@@ -52,8 +60,12 @@ class NanaCall(
 
     override fun timeout(): Timeout = delegate.timeout()
 
-//    @Throws(IOException::class)
-//    private fun Response<Any>.toResult(): String {
-//        return body()?.let { Result.success(it) } ?: Result.failure<String>(Exception(""))
-//    }
+
+    private fun Throwable.toFailure() =
+        when (this) {
+            is HttpException -> NanaException.ServerException(this, code())
+            is ApiException -> MyApiException(statusCode, message ?: "api exception")
+            else -> NanaException.NetworkException(this)
+        }
+
 }
