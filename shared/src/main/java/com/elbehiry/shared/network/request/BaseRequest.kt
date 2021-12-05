@@ -72,10 +72,10 @@ suspend inline fun <reified REQ, reified RES : Any> HttpClient<*>.post(
     }
 }
 
-suspend inline fun <reified REQ, reified RES : Any> HttpClient<*>.postOrNull(
+suspend inline fun <reified REQ, reified RES : Any> HttpClient<*>.postOrThrow(
     url: String,
     body: REQ,
     builder: PostRequest.() -> Unit = {},
 ): RES? {
-    return post<REQ, RES>(url, body, builder).getOrNull()
+    return post<REQ, RES>(url, body, builder).getOrThrow()
 }
