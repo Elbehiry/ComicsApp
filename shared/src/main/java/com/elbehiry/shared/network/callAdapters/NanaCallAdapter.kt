@@ -1,5 +1,6 @@
 package com.elbehiry.shared.network.callAdapters
 
+import com.elbehiry.shared.network.features.NanaException
 import retrofit2.Call
 import retrofit2.CallAdapter
 import java.lang.reflect.Type

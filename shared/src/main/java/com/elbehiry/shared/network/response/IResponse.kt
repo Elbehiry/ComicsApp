@@ -9,4 +9,5 @@ interface IResponse {
     fun message(): String?
     fun headers(): Map<String, List<String>>
     fun body(): String?
+    fun addRequestHeader(pair: Pair<String, String>)
 }

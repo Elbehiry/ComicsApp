@@ -24,7 +24,6 @@ import com.elbehiry.shared.BuildConfig
 import com.elbehiry.shared.data.pref.repository.DataStoreLocalSource
 import com.elbehiry.shared.data.pref.repository.DataStoreOperations
 import com.elbehiry.shared.network.Network
-import com.elbehiry.shared.network.features.NanaException
 import com.elbehiry.shared.network.integeration.retrofit.RetrofitClientFactory
 import com.elbehiry.shared.network.integeration.retrofit.RetrofitHttpClient
 import com.elbehiry.shared.network.request.post
@@ -33,11 +32,15 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import java.io.IOException
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.Serializable
 import javax.inject.Singleton
 
 const val dataStoreName = "ComicsDataStore"
-class MyProjectException(override val message:String?): IOException()
+@Serializable
+class TokenRefresh(val token: String)
+
 @InstallIn(SingletonComponent::class)
 @Module
 class SharedModule {
@@ -57,7 +60,17 @@ class SharedModule {
     fun provideNetwork(
         @ApplicationContext context: Context
     ): RetrofitHttpClient {
-       return  Network.initialize(RetrofitClientFactory(context)) {
+        val client = Network.initialize(RetrofitClientFactory(context)) {
+            install(RetrofitClientFactory.BaseUrlFactory(BuildConfig.xkcd_BASE_URL))
+            install(RetrofitClientFactory.ChuckFactory())
+            install(RetrofitClientFactory.ResponseValidatorFactory()) {
+                validator = { nanaException ->
+                    nanaException
+                }
+            }
+
+        }
+        return Network.initialize(RetrofitClientFactory(context)) {
             install(RetrofitClientFactory.BaseUrlFactory(BuildConfig.xkcd_BASE_URL))
             install(RetrofitClientFactory.ChuckFactory())
             install(RetrofitClientFactory.TimeOutsFactory()) {
@@ -77,7 +90,10 @@ class SharedModule {
 
             install(RetrofitClientFactory.AuthenticatorFactory()) {
                 authenticate = {
-
+                    val token: Result<TokenRefresh> = runBlocking(IO) {
+                            client.post("https://dindinntask.getsandbox.com/refresh", TokenRefresh("TTTTTTTTTCASDASLDLASLD"))
+                    }
+                    it.addRequestHeader(("auth" to  (token.getOrNull()?.token?:"")))
                     it
                 }
             }
@@ -89,12 +105,7 @@ class SharedModule {
 
             install(RetrofitClientFactory.ResponseValidatorFactory()) {
                 validator = { nanaException ->
-                    when (nanaException) {
-                        is NanaException.ServerException -> MyProjectException(nanaException.message)
-                        is NanaException.NetworkException -> MyProjectException(nanaException.message)
-                        is NanaException.ClientException -> MyProjectException(nanaException.message)
-                        is NanaException.ApiException -> MyProjectException(nanaException.message)
-                    }
+                   nanaException
                 }
             }
         }

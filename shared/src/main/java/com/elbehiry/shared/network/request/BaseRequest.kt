@@ -55,7 +55,7 @@ suspend inline fun <reified R : Any> HttpClient<*>.form(
 suspend inline fun <reified REQ, reified RES : Any> HttpClient<*>.post(
     url: String,
     body: REQ,
-    builder: PostRequest.() -> Unit,
+    builder: PostRequest.() -> Unit={},
 ): Result<RES> {
     return try {
         val request =
